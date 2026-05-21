@@ -6,8 +6,8 @@
 
 ### 已完成
 
-- 初始化 `{{PROJECT_NAME}}` 的 docs harness 骨架
-- 新增 `plans/`、`progress/`、`standards/`、`adr/`、`architecture/`、`verification/`、`exec-plan/` 基础目录与模板
+- 初始化 `{{PROJECT_NAME}}` 的 harness 骨架
+- 新增 `plans/`（含 `progress.md`、`feature-list.json`、`exec-plan/`）、`standards/`、`architecture/`（含 `adr/`）、`verification/`、`reference/` 基础目录与模板
 - 如仓库原先缺少 `AGENTS.md`，已创建最小入口文件
 
 ### 当前状态
@@ -18,9 +18,9 @@
 
 ### 下一步建议
 
-1. 盘点现有输入资料并整理到 `docs/reference/`
-2. 根据当前仓库真实目标改写 `docs/plans/feature-list.json`
-3. 补齐 `docs/standards/` 中的环境、部署和协作规则
+1. 盘点现有输入资料并整理到 `harness/reference/`
+2. 根据当前仓库真实目标改写 `harness/plans/feature-list.json`
+3. 补齐 `harness/standards/` 中的环境、部署和协作规则
 4. 根据仓库实际情况补第一轮架构文档和执行计划
 
 ### 注意事项

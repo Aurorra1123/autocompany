@@ -1,4 +1,4 @@
-# Docs Harness Blueprint
+# Harness Blueprint
 
 ## Goal
 
@@ -8,29 +8,29 @@ Create a repository-local execution layer for long-running agent and human colla
 
 - `AGENTS.md`
   Create only when missing. Keep it short. Use it as an entrypoint and constraint file, not as a full knowledge base.
-- `docs/README.md`
-  Explain the docs layout and the default workflow.
-- `docs/plans/feature-list.json`
+- `harness/README.md`
+  Explain the harness layout and the default workflow.
+- `harness/plans/feature-list.json`
   Keep a structured backlog with acceptance criteria and passing status.
-- `docs/progress/agent-progress.md`
+- `harness/plans/progress.md`
   Record session handoff notes, current state, and next-step suggestions.
-- `docs/standards/`
+- `harness/plans/exec-plan/`
+  Store phase-level execution plans that decompose the backlog.
+- `harness/standards/`
   Store durable engineering rules, git workflow, harness rules, and deployment baseline.
-- `docs/adr/`
-  Store important architecture and workflow decisions.
-- `docs/architecture/`
+- `harness/architecture/`
   Store formal technical solutions, diagrams, and environment audits.
-- `docs/verification/`
+- `harness/architecture/adr/`
+  Store important architecture and workflow decisions (ADRs).
+- `harness/verification/`
   Store evidence that justifies changing status to passing.
-- `docs/exec-plan/`
-  Store phase-level execution plans.
-- `docs/reference/`
+- `harness/reference/`
   Store source material, imports, screenshots, legacy notes, PDFs, and raw background documents.
 
 ## What This Skill Does Not Do
 
 - Infer the repository's real business roadmap automatically
-- Replace an already-mature docs system without review
+- Replace an already-mature harness without review
 - Generate project-specific architecture content
 - Update CI, deployment, or application code
 
@@ -40,13 +40,13 @@ After bootstrapping, update these files first:
 
 1. `AGENTS.md`
    Align language, approval rules, environment management, and safety constraints with the user or team.
-2. `docs/plans/feature-list.json`
+2. `harness/plans/feature-list.json`
    Replace the generic bootstrap backlog with the repository's actual delivery roadmap.
-3. `docs/progress/agent-progress.md`
+3. `harness/plans/progress.md`
    Rewrite the initial entry so it matches the current repository baseline instead of the generic scaffold message.
-4. `docs/standards/deployment-baseline.md`
+4. `harness/standards/deployment-baseline.md`
    Fill in actual environment, domain, secret, and runtime constraints.
-5. `docs/adr/0001-*.md` and `docs/adr/0002-*.md`
+5. `harness/architecture/adr/0001-*.md` and `harness/architecture/adr/0002-*.md`
    Keep them if the repository really follows repo-as-memory and harness-first workflow. Add new ADRs for repository-specific decisions.
 
 ## Merge Strategy for Existing Repositories
@@ -61,7 +61,7 @@ If the target already has documentation:
 
 ## Suggested First Follow-Up Tasks
 
-- Inventory existing source materials and move them under `docs/reference/` or link them clearly
-- Create the first repository-specific execution plan in `docs/exec-plan/`
-- Capture the real architecture baseline in `docs/architecture/`
+- Inventory existing source materials and move them under `harness/reference/` or link them clearly
+- Create the first repository-specific execution plan in `harness/plans/exec-plan/`
+- Capture the real architecture baseline in `harness/architecture/`
 - Add at least one verification artifact before changing any backlog item to passing

@@ -14,8 +14,8 @@
 
 ## 开始工作前
 
-- 阅读 `docs/progress/agent-progress.md`
-- 阅读 `docs/plans/feature-list.json`
+- 阅读 `harness/plans/progress.md`
+- 阅读 `harness/plans/feature-list.json`
 - 阅读最近的 git 历史，确认当前基线
 - 抽样回归 1-2 个已标记通过的核心功能或关键流程
 - 如果回归失败，先将对应测试状态改回未通过并修复，再开发新功能
@@ -41,7 +41,7 @@
 ## 验证证据
 
 - 验证结论不能只留在聊天记录中，必须落到仓库可追踪工件
-- 验证证据默认放在 `docs/verification/`
+- 验证证据默认放在 `harness/verification/`
 - 前端、E2E 或交互流程验证，优先保存截图、录屏链接或报告摘要
 - 命令行、自测与压测验证，优先保存关键输出摘要、报告文件或日志片段
 - 只有在存在可追溯验证证据时，才允许将测试项或功能项改为通过
@@ -49,7 +49,7 @@
 
 ## 会话结束条件
 
-- 已更新 `docs/progress/agent-progress.md`
+- 已更新 `harness/plans/progress.md`
 - 已更新对应任务或测试项的通过状态
 - 已记录本次验证证据或明确说明缺失原因
 - 工作区无未提交改动
@@ -57,12 +57,12 @@
 
 ## 文档落位
 
-- 长期规则放在 `docs/standards/`
-- 重要决策放在 `docs/adr/`
-- 阶段计划放在 `docs/exec-plan/`
-- 任务状态放在 `docs/plans/feature-list.json`
-- 会话交接和阶段进展放在 `docs/progress/agent-progress.md`
-- 原始输入材料保留在 `docs/reference/`
+- 长期规则放在 `harness/standards/`
+- 重要决策放在 `harness/architecture/adr/`
+- 阶段计划放在 `harness/plans/exec-plan/`
+- 任务状态放在 `harness/plans/feature-list.json`
+- 会话交接和阶段进展放在 `harness/plans/progress.md`
+- 原始输入材料保留在 `harness/reference/`
 
 ## 反模式
 

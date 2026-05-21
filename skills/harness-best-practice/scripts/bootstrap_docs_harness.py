@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bootstrap a repository-local docs harness scaffold."""
+"""Bootstrap a repository-local harness scaffold."""
 
 import argparse
 from datetime import date
@@ -16,38 +16,38 @@ class TemplateOp(NamedTuple):
 
 TEMPLATE_OPS = (
     TemplateOp("AGENTS.md", "AGENTS.md", "if_missing"),
-    TemplateOp("docs/README.md", "docs/README.md"),
-    TemplateOp("docs/plans/feature-list.json", "docs/plans/feature-list.json"),
-    TemplateOp("docs/progress/agent-progress.md", "docs/progress/agent-progress.md"),
-    TemplateOp("docs/standards/engineering-rules.md", "docs/standards/engineering-rules.md"),
-    TemplateOp("docs/standards/git-workflow.md", "docs/standards/git-workflow.md"),
+    TemplateOp("harness/README.md", "harness/README.md"),
+    TemplateOp("harness/plans/feature-list.json", "harness/plans/feature-list.json"),
+    TemplateOp("harness/plans/progress.md", "harness/plans/progress.md"),
+    TemplateOp("harness/plans/exec-plan/README.md", "harness/plans/exec-plan/README.md"),
+    TemplateOp("harness/standards/engineering-rules.md", "harness/standards/engineering-rules.md"),
+    TemplateOp("harness/standards/git-workflow.md", "harness/standards/git-workflow.md"),
     TemplateOp(
-        "docs/standards/agent-harness-rules.md",
-        "docs/standards/agent-harness-rules.md",
+        "harness/standards/agent-harness-rules.md",
+        "harness/standards/agent-harness-rules.md",
     ),
     TemplateOp(
-        "docs/standards/deployment-baseline.md",
-        "docs/standards/deployment-baseline.md",
+        "harness/standards/deployment-baseline.md",
+        "harness/standards/deployment-baseline.md",
     ),
-    TemplateOp("docs/adr/README.md", "docs/adr/README.md"),
+    TemplateOp("harness/architecture/README.md", "harness/architecture/README.md"),
+    TemplateOp("harness/architecture/adr/README.md", "harness/architecture/adr/README.md"),
     TemplateOp(
-        "docs/adr/0001-repo-as-agent-memory.md",
-        "docs/adr/0001-repo-as-agent-memory.md",
+        "harness/architecture/adr/0001-repo-as-agent-memory.md",
+        "harness/architecture/adr/0001-repo-as-agent-memory.md",
     ),
     TemplateOp(
-        "docs/adr/0002-harness-first-agent-workflow.md",
-        "docs/adr/0002-harness-first-agent-workflow.md",
+        "harness/architecture/adr/0002-harness-first-agent-workflow.md",
+        "harness/architecture/adr/0002-harness-first-agent-workflow.md",
     ),
-    TemplateOp("docs/architecture/README.md", "docs/architecture/README.md"),
-    TemplateOp("docs/verification/README.md", "docs/verification/README.md"),
-    TemplateOp("docs/exec-plan/README.md", "docs/exec-plan/README.md"),
-    TemplateOp("docs/reference/README.md", "docs/reference/README.md"),
+    TemplateOp("harness/verification/README.md", "harness/verification/README.md"),
+    TemplateOp("harness/reference/README.md", "harness/reference/README.md"),
 )
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Bootstrap a docs harness scaffold into a target repository.",
+        description="Bootstrap a harness scaffold into a target repository.",
     )
     parser.add_argument(
         "target",
@@ -162,7 +162,7 @@ def main() -> int:
 
     if skipped:
         print()
-        print("Review skipped files and merge manually if the repository already has partial docs structure.")
+        print("Review skipped files and merge manually if the repository already has partial harness structure.")
 
     if not (target_root / ".git").exists():
         print()

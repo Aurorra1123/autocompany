@@ -19,7 +19,7 @@ Accepted
 - 完成状态必须建立在最小必要验证之上
 - 重复性问题通过规则、模板、脚本或 CI 约束修复
 
-具体执行规则维护在 `docs/standards/agent-harness-rules.md`。
+具体执行规则维护在 `harness/standards/agent-harness-rules.md`。
 
 ## Consequences
 

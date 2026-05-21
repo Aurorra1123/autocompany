@@ -1,18 +1,18 @@
 ---
 name: harness-best-practice
-description: Bootstrap a repository-level docs harness for long-running agent and human collaboration. Use when Codex needs to initialize or normalize documentation structure in a new or messy repository, especially to add `docs/plans/feature-list.json`, `docs/progress/agent-progress.md`, `docs/standards/`, `docs/adr/`, `docs/verification/`, `docs/exec-plan/`, and a lightweight `AGENTS.md` entrypoint that keeps durable knowledge out of chat.
+description: Bootstrap a repository-level harness for long-running agent and human collaboration. Use when Codex needs to initialize or normalize the durable-memory structure in a new or messy repository, especially to add `harness/plans/feature-list.json`, `harness/plans/progress.md`, `harness/standards/`, `harness/architecture/adr/`, `harness/verification/`, `harness/reference/`, and a lightweight `AGENTS.md` entrypoint that keeps durable knowledge out of chat.
 ---
 
 # Harness Best Practice
 
 ## Overview
 
-Initialize a reusable docs harness that treats the repository as durable memory instead of relying on chat history. Use the bundled script to scaffold a `docs/` execution layer and create a minimal `AGENTS.md` only when the target repository does not already have one.
+Initialize a reusable harness that treats the repository as durable memory instead of relying on chat history. Use the bundled script to scaffold a `harness/` execution layer and create a minimal `AGENTS.md` only when the target repository does not already have one.
 
 ## Workflow
 
 1. Inspect the target repository before writing anything.
-   Check whether `AGENTS.md`, `docs/`, or an existing planning system already exists. If the repository already has partial structure, prefer merging manually instead of overwriting.
+   Check whether `AGENTS.md`, `harness/`, or an existing planning system already exists. If the repository already has partial structure, prefer merging manually instead of overwriting.
 2. Run a dry-run first.
 
    ```bash
@@ -33,7 +33,7 @@ Initialize a reusable docs harness that treats the repository as durable memory 
 
 ## Existing Repositories
 
-- If the target already contains `docs/plans/feature-list.json` or `docs/progress/agent-progress.md`, treat the scaffold as reference material and merge carefully.
+- If the target already contains `harness/plans/feature-list.json` or `harness/plans/progress.md`, treat the scaffold as reference material and merge carefully.
 - Do not overwrite existing `AGENTS.md` unless the user explicitly asks for it.
 - Do not copy business-specific roadmap items from another repository into the new one without rewriting them.
 

@@ -22,7 +22,7 @@ type(scope): summary
 示例：
 
 ```text
-docs(harness): bootstrap docs execution layer
+docs(harness): bootstrap harness execution layer
 docs(progress): record repository baseline
 chore(repo): align AGENTS and standards
 ```
@@ -30,8 +30,8 @@ chore(repo): align AGENTS and standards
 ## 每次会话的最小流程
 
 1. 阅读 `git log --oneline -20`
-2. 阅读 `docs/progress/agent-progress.md`
-3. 阅读 `docs/plans/feature-list.json`
+2. 阅读 `harness/plans/progress.md`
+3. 阅读 `harness/plans/feature-list.json`
 4. 选择一个任务推进
 5. 修改文件并自检
 6. 更新进度文档

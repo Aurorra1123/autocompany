@@ -16,13 +16,13 @@
 - `reference/` 只放参考资料和原始输入
 - 正式规范、计划、进度、决策不放在 `reference/`
 - 同一份信息只保留一个主维护位置，其他地方只做链接
-- 重要设计选择写入 `adr/`
+- 重要设计选择写入 `architecture/adr/`
 - agent 长周期执行规则维护在 `standards/agent-harness-rules.md`
 - 部署长期基线维护在 `standards/deployment-baseline.md`
 
 ## Agent 协作规则
 
-- 开始前先读 `progress/agent-progress.md`
+- 开始前先读 `plans/progress.md`
 - 开始前先读 `plans/feature-list.json`
 - 只选择一个未完成的高优先级任务推进
 - 完成后再修改任务状态，不允许先标完成

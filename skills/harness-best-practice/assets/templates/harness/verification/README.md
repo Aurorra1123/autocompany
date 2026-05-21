@@ -25,7 +25,7 @@
 示例：
 
 ```text
-docs/verification/
+harness/verification/
 └── 2026-04-16/
     ├── foundation-stack/
     │   ├── build.txt
