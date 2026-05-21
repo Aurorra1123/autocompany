@@ -1,0 +1,74 @@
+[
+  {
+    "id": "DOCS-001",
+    "category": "docs-foundation",
+    "priority": "P0",
+    "description": "建立 docs harness 目录结构与导航入口",
+    "acceptance": [
+      "存在 `docs/README.md` 并说明 docs 分层",
+      "存在 `plans/`、`progress/`、`standards/`、`adr/`、`verification/`、`exec-plan/`",
+      "如仓库缺少 `AGENTS.md`，已补最小入口文件"
+    ],
+    "passes": false
+  },
+  {
+    "id": "DOCS-002",
+    "category": "docs-inputs",
+    "priority": "P0",
+    "description": "盘点原始资料并明确 `reference/` 的输入边界",
+    "acceptance": [
+      "现有需求、旧文档、截图、PDF 或外部资料有稳定落位",
+      "`reference/` 与正式规则、计划、进度有明确边界",
+      "新会话能快速知道哪些文件是输入材料"
+    ],
+    "passes": false
+  },
+  {
+    "id": "DOCS-003",
+    "category": "workflow",
+    "priority": "P0",
+    "description": "建立进度记录、任务状态和验证证据的闭环",
+    "acceptance": [
+      "存在 `docs/progress/agent-progress.md`",
+      "存在结构化任务清单并带通过状态",
+      "存在 `docs/verification/README.md` 说明验证证据存放规范"
+    ],
+    "passes": false
+  },
+  {
+    "id": "DOCS-004",
+    "category": "standards",
+    "priority": "P1",
+    "description": "固化仓库级工程规则、agent 规则和 git 工作流",
+    "acceptance": [
+      "长期规则维护在 `docs/standards/`",
+      "存在开始工作前、完成判定和结束条件的明确约束",
+      "会话不再依赖隐性聊天上下文"
+    ],
+    "passes": false
+  },
+  {
+    "id": "DOCS-005",
+    "category": "adr",
+    "priority": "P1",
+    "description": "记录 repo-as-memory 与 harness-first 的初始决策",
+    "acceptance": [
+      "存在至少 2 条基础 ADR",
+      "决策说明包含背景、决策和影响",
+      "后续重要结构变化有稳定决策入口"
+    ],
+    "passes": false
+  },
+  {
+    "id": "DOCS-006",
+    "category": "roadmap",
+    "priority": "P1",
+    "description": "将通用模板替换为 `{{PROJECT_NAME}}` 的真实路线图",
+    "acceptance": [
+      "当前任务清单反映真实业务或工程目标",
+      "优先级、验收标准和通过状态不再停留在模板层",
+      "新会话无需回看旧聊天即可恢复主线"
+    ],
+    "passes": false
+  }
+]

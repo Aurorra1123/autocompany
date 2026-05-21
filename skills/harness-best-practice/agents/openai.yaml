@@ -1,0 +1,4 @@
+interface:
+  display_name: "Harness Best Practice"
+  short_description: "Bootstrap docs harness for new repositories"
+  default_prompt: "Use $harness-best-practice to initialize a docs harness in this repository."
