@@ -9,7 +9,8 @@
       "存在 `plans/`、`standards/`、`architecture/`、`verification/`、`reference/` 五个执行/输入目录",
       "如仓库缺少 `AGENTS.md`，已补最小入口文件"
     ],
-    "passes": false
+    "passes": false,
+    "owner": ""
   },
   {
     "id": "HRN-002",
@@ -21,7 +22,8 @@
       "`reference/` 与正式规则、计划、进度有明确边界",
       "新会话能快速知道哪些文件是输入材料"
     ],
-    "passes": false
+    "passes": false,
+    "owner": ""
   },
   {
     "id": "HRN-003",
@@ -33,7 +35,8 @@
       "存在结构化任务清单并带通过状态",
       "存在 `harness/verification/README.md` 说明验证证据存放规范"
     ],
-    "passes": false
+    "passes": false,
+    "owner": ""
   },
   {
     "id": "HRN-004",
@@ -45,7 +48,8 @@
       "存在开始工作前、完成判定和结束条件的明确约束",
       "会话不再依赖隐性聊天上下文"
     ],
-    "passes": false
+    "passes": false,
+    "owner": ""
   },
   {
     "id": "HRN-005",
@@ -57,7 +61,8 @@
       "决策说明包含背景、决策和影响",
       "后续重要结构变化有稳定决策入口"
     ],
-    "passes": false
+    "passes": false,
+    "owner": ""
   },
   {
     "id": "HRN-006",
@@ -69,6 +74,7 @@
       "优先级、验收标准和通过状态不再停留在模板层",
       "新会话无需回看旧聊天即可恢复主线"
     ],
-    "passes": false
+    "passes": false,
+    "owner": ""
   }
 ]

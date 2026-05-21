@@ -1,0 +1,4 @@
+interface:
+  display_name: "Super Harness"
+  short_description: "Bootstrap a shared harness for team-scale agent collaboration"
+  default_prompt: "Use $super-harness to initialize a team-shared harness in this repository."

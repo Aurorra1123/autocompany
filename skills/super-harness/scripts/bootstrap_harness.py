@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bootstrap a repository-local harness scaffold."""
+"""Bootstrap a repository-local super-harness scaffold."""
 
 import argparse
 from datetime import date
@@ -11,25 +11,19 @@ from typing import NamedTuple
 class TemplateOp(NamedTuple):
     source: str
     target: str
-    condition: str = "always"
+    condition: str = "always"  # "always" | "if_missing"
+    ide: str = ""  # "" for core ops, otherwise one of CORE_IDE keys
 
 
-TEMPLATE_OPS = (
-    TemplateOp("AGENTS.md", "AGENTS.md", "if_missing"),
+CORE_OPS = (
     TemplateOp("harness/README.md", "harness/README.md"),
     TemplateOp("harness/plans/feature-list.json", "harness/plans/feature-list.json"),
     TemplateOp("harness/plans/progress.md", "harness/plans/progress.md"),
     TemplateOp("harness/plans/exec-plan/README.md", "harness/plans/exec-plan/README.md"),
     TemplateOp("harness/standards/engineering-rules.md", "harness/standards/engineering-rules.md"),
     TemplateOp("harness/standards/git-workflow.md", "harness/standards/git-workflow.md"),
-    TemplateOp(
-        "harness/standards/agent-harness-rules.md",
-        "harness/standards/agent-harness-rules.md",
-    ),
-    TemplateOp(
-        "harness/standards/deployment-baseline.md",
-        "harness/standards/deployment-baseline.md",
-    ),
+    TemplateOp("harness/standards/agent-harness-rules.md", "harness/standards/agent-harness-rules.md"),
+    TemplateOp("harness/standards/deployment-baseline.md", "harness/standards/deployment-baseline.md"),
     TemplateOp("harness/architecture/README.md", "harness/architecture/README.md"),
     TemplateOp("harness/architecture/adr/README.md", "harness/architecture/adr/README.md"),
     TemplateOp(
@@ -44,10 +38,45 @@ TEMPLATE_OPS = (
     TemplateOp("harness/reference/README.md", "harness/reference/README.md"),
 )
 
+# AGENTS.md is the canonical entrypoint, shared by Codex and the OpenAI Agents SDK.
+# Other IDEs get a short stub that points at it.
+IDE_OPS = {
+    "codex": (TemplateOp("AGENTS.md", "AGENTS.md", "if_missing", "codex"),),
+    "claude": (TemplateOp("ide-stubs/CLAUDE.md", "CLAUDE.md", "if_missing", "claude"),),
+    "cursor": (
+        TemplateOp(
+            "ide-stubs/cursor-rules/super-harness.mdc",
+            ".cursor/rules/super-harness.mdc",
+            "if_missing",
+            "cursor",
+        ),
+    ),
+}
+
+# Markers that indicate the target repo is already used with a given IDE.
+IDE_MARKERS = {
+    "codex": ("AGENTS.md",),
+    "claude": ("CLAUDE.md", ".claude"),
+    "cursor": (".cursor", ".cursorrules"),
+}
+
+
+def detect_ides(target_root: Path) -> list[str]:
+    """Return IDEs that already have markers in the target repo.
+
+    If none are detected, fall back to all supported IDEs so a fresh repo
+    gets every entrypoint and any agent can pick it up.
+    """
+    found = []
+    for ide, markers in IDE_MARKERS.items():
+        if any((target_root / marker).exists() for marker in markers):
+            found.append(ide)
+    return found or list(IDE_OPS.keys())
+
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Bootstrap a harness scaffold into a target repository.",
+        description="Bootstrap a super-harness scaffold into a target repository.",
     )
     parser.add_argument(
         "target",
@@ -60,6 +89,17 @@ def build_parser() -> argparse.ArgumentParser:
         help="Project name used in template placeholders. Defaults to the target directory name.",
     )
     parser.add_argument(
+        "--ide",
+        default="auto",
+        help=(
+            "Which IDE entrypoint stubs to generate. "
+            "auto (default) detects existing markers (CLAUDE.md/.claude, .cursor, AGENTS.md); "
+            "all generates every supported stub; "
+            "none skips IDE stubs entirely; "
+            "or pass a comma-separated subset of: " + ",".join(IDE_OPS.keys())
+        ),
+    )
+    parser.add_argument(
         "--force",
         action="store_true",
         help="Overwrite existing target files instead of skipping them.",
@@ -69,12 +109,25 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Print planned operations without writing files.",
     )
-    parser.add_argument(
-        "--skip-agents",
-        action="store_true",
-        help="Do not create AGENTS.md even if it is missing.",
-    )
     return parser
+
+
+def resolve_ide_selection(arg: str, target_root: Path) -> list[str]:
+    arg = arg.strip().lower()
+    if arg in ("none", ""):
+        return []
+    if arg == "all":
+        return list(IDE_OPS.keys())
+    if arg == "auto":
+        return detect_ides(target_root)
+    selected = [item.strip() for item in arg.split(",") if item.strip()]
+    unknown = [item for item in selected if item not in IDE_OPS]
+    if unknown:
+        raise SystemExit(
+            f"[ERROR] Unknown --ide value(s): {', '.join(unknown)}. "
+            f"Supported: {', '.join(IDE_OPS.keys())}, plus auto/all/none."
+        )
+    return selected
 
 
 def render_template(raw_text: str, project_name: str, today: str) -> str:
@@ -113,25 +166,29 @@ def main() -> int:
 
     project_name = args.project_name or target_root.name
     today = date.today().isoformat()
+    selected_ides = resolve_ide_selection(args.ide, target_root)
 
-    ops = []
-    for op in TEMPLATE_OPS:
-        if op.target == "AGENTS.md" and args.skip_agents:
-            continue
+    ops: list[TemplateOp] = list(CORE_OPS)
+    for ide in selected_ides:
+        ops.extend(IDE_OPS[ide])
+
+    resolved = []
+    for op in ops:
         destination = target_root / op.target
         action = determine_action(destination, args.force, op.condition)
-        ops.append((action, op, destination))
+        resolved.append((action, op, destination))
 
     print(f"Target: {target_root}")
     print(f"Project name: {project_name}")
     print(f"Date token: {today}")
+    print(f"IDE stubs: {', '.join(selected_ides) if selected_ides else 'none'}")
     print()
 
     created = []
     overwritten = []
     skipped = []
 
-    for action, op, destination in ops:
+    for action, op, destination in resolved:
         if action == "skip":
             skipped.append(str(destination))
             print(f"[SKIP] {destination}")
