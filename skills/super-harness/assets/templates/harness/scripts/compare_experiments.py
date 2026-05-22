@@ -60,6 +60,8 @@ def resolve_evidence(root: Path, index_rows: list[dict[str, Any]], value: str) -
     candidate = Path(value)
     if not candidate.is_absolute():
         candidate = root / value
+    if candidate.is_dir():
+        candidate = candidate / "record.md"
     if candidate.exists():
         relative = rel_path(candidate.resolve(), root)
         if relative in by_path:
@@ -92,7 +94,7 @@ def markdown_table(rows: list[dict[str, Any]]) -> list[str]:
         metrics = "; ".join(row.get("metrics") or [])
         record = row.get("record_path") or row.get("record_id") or "unknown"
         title = row.get("title") or row.get("record_id") or "unknown"
-        link = f"[{title}]({record})" if row.get("record_path") else title
+        link = comparison_relative_link(record, title) if row.get("record_path") else title
         lines.append(
             "| "
             + " | ".join(
@@ -120,6 +122,13 @@ def compare_set(rows: list[dict[str, Any]], getter) -> str:
     return "no"
 
 
+def comparison_relative_link(record_path: str, title: str) -> str:
+    if record_path.startswith("harness/verification/experiments/"):
+        relative = "../experiments/" + record_path.removeprefix("harness/verification/experiments/")
+        return f"[{title}]({relative})"
+    return f"[{title}]({record_path})"
+
+
 def auto_fairness_checks(rows: list[dict[str, Any]]) -> list[str]:
     metric_names = set()
     for row in rows:
@@ -136,6 +145,10 @@ def auto_fairness_checks(rows: list[dict[str, Any]]) -> list[str]:
 
     return [
         f"Same commit: {compare_set(rows, lambda row: (row.get('git') or {}).get('commit'))}",
+        f"Same model base: {compare_set(rows, lambda row: (row.get('model_context') or {}).get('model_base'))}",
+        f"Same tokenizer: {compare_set(rows, lambda row: (row.get('model_context') or {}).get('tokenizer'))}",
+        f"Same train tokens: {compare_set(rows, lambda row: (row.get('model_context') or {}).get('train_tokens'))}",
+        f"Same eval suite: {compare_set(rows, lambda row: (row.get('model_context') or {}).get('eval_suite'))}",
         f"Same dataset entries: {compare_set(rows, lambda row: tuple(row.get('datasets') or []))}",
         f"Same seed entries: {compare_set(rows, lambda row: tuple(row.get('seeds') or []))}",
         f"All recorded source worktrees clean: {clean}",

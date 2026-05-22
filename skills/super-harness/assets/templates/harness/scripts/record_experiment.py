@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 import platform
 import re
+import shutil
 import shlex
 import subprocess
 import sys
@@ -214,6 +215,120 @@ def reliability_flags(git: dict[str, Any], args: argparse.Namespace) -> list[str
     return flags
 
 
+def model_context(args: argparse.Namespace) -> dict[str, str]:
+    fields = (
+        "experiment_type",
+        "model_base",
+        "model_size",
+        "checkpoint",
+        "data_mix",
+        "data_version",
+        "tokenizer",
+        "train_tokens",
+        "global_batch_size",
+        "learning_rate",
+        "schedule",
+        "compute",
+        "eval_suite",
+    )
+    return {field: getattr(args, field) for field in fields if getattr(args, field)}
+
+
+def append_mapping(lines: list[str], title: str, values: dict[str, str]) -> None:
+    lines.extend([f"## {title}", ""])
+    if values:
+        lines.extend(f"- {key}: {value}" for key, value in values.items())
+    else:
+        lines.append("- Not recorded")
+    lines.append("")
+
+
+def load_existing_index(root: Path) -> list[dict[str, Any]]:
+    index_path = root / "harness" / "verification" / "experiments" / "index.jsonl"
+    if not index_path.exists():
+        return []
+    rows = []
+    for line in index_path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            rows.append(json.loads(line))
+        except json.JSONDecodeError:
+            continue
+    return rows
+
+
+def duplicate_reasons(args: argparse.Namespace, command_text: str, row: dict[str, Any]) -> list[str]:
+    reasons = []
+    if command_text and row.get("command") == command_text:
+        reasons.append("same command")
+    if args.dataset and row.get("datasets") == args.dataset:
+        reasons.append("same dataset entries")
+    if args.seed and row.get("seeds") == args.seed:
+        reasons.append("same seed entries")
+    if args.eval_suite and (row.get("model_context") or {}).get("eval_suite") == args.eval_suite:
+        reasons.append("same eval suite")
+    if args.tag and set(args.tag).intersection(row.get("tags") or []):
+        reasons.append("overlapping tags")
+    return reasons
+
+
+def warn_similar_experiments(root: Path, args: argparse.Namespace, command_text: str) -> None:
+    if args.no_duplicate_check:
+        return
+    matches = []
+    for row in load_existing_index(root):
+        reasons = duplicate_reasons(args, command_text, row)
+        if len(reasons) >= 2 or "same command" in reasons:
+            matches.append((row, reasons))
+
+    if not matches:
+        return
+
+    print("[SIMILAR] Existing experiments may overlap with this run:", file=sys.stderr)
+    for row, reasons in matches[:5]:
+        print(
+            f"- {row.get('record_id')} ({row.get('title')}): {', '.join(reasons)}",
+            file=sys.stderr,
+        )
+    print("[SIMILAR] Continue only if this run intentionally changes a controlled variable.", file=sys.stderr)
+
+
+def copy_resource_files(root: Path, experiment_dir: Path, values: list[str], folder: str) -> list[str]:
+    copied = []
+    destination_dir = experiment_dir / folder
+    for value in values:
+        source = Path(value)
+        if not source.is_absolute():
+            source = root / value
+        if not source.exists() or not source.is_file():
+            copied.append(f"missing:{value}")
+            continue
+        destination_dir.mkdir(parents=True, exist_ok=True)
+        destination = destination_dir / source.name
+        if destination.exists():
+            destination = destination_dir / f"{source.stem}-{now_utc().strftime('%H%M%S')}{source.suffix}"
+        shutil.copy2(source, destination)
+        copied.append(rel_path(destination, root))
+    return copied
+
+
+def write_json(path: Path, data: dict[str, Any]) -> Path:
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return path
+
+
+def write_artifacts_manifest(path: Path, artifact_refs: list[str], copied_artifacts: list[str], copied_configs: list[str]) -> Path:
+    lines = ["# Experiment Artifacts", "", "## External Artifact References", ""]
+    lines.extend(f"- {value}" for value in artifact_refs) if artifact_refs else lines.append("- Not recorded")
+    lines.extend(["", "## Copied Artifact Files", ""])
+    lines.extend(f"- `{value}`" for value in copied_artifacts) if copied_artifacts else lines.append("- Not recorded")
+    lines.extend(["", "## Copied Config Files", ""])
+    lines.extend(f"- `{value}`" for value in copied_configs) if copied_configs else lines.append("- Not recorded")
+    path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+    return path
+
+
 def build_record(
     args: argparse.Namespace,
     root: Path,
@@ -227,6 +342,9 @@ def build_record(
     git: dict[str, Any],
     env: dict[str, str],
     author: str,
+    copied_configs: list[str],
+    copied_artifacts: list[str],
+    metrics_path: Path,
 ) -> str:
     timestamp = now_utc() if run is None else run["started"]
     lines = [
@@ -281,12 +399,17 @@ def build_record(
     lines.append("")
 
     append_list(lines, "Parameters", args.param)
+    append_mapping(lines, "Model And Training Context", model_context(args))
     append_list(lines, "Datasets", args.dataset)
     append_list(lines, "Seeds", args.seed)
     append_list(lines, "Metrics", args.metric)
     append_list(lines, "Artifacts", args.artifact)
+    append_list(lines, "Copied Config Files", copied_configs)
+    append_list(lines, "Copied Artifact Files", copied_artifacts)
     append_list(lines, "Tags", args.tag)
     append_list(lines, "Fairness Notes", args.fairness_note)
+
+    lines.extend(["## Machine-Readable Metrics", "", f"- Metrics JSON: `{rel_path(metrics_path, root)}`", ""])
 
     lines.extend(["## Result", "", args.result.strip() or "Not recorded", ""])
     append_list(lines, "Next Steps", args.next_steps)
@@ -322,6 +445,11 @@ def build_index_row(
     git: dict[str, Any],
     env: dict[str, str],
     author: str,
+    experiment_dir: Path,
+    metrics_path: Path,
+    artifacts_manifest_path: Path,
+    copied_configs: list[str],
+    copied_artifacts: list[str],
 ) -> dict[str, Any]:
     started = now_utc() if run is None else run["started"]
     ended = None if run is None else run["ended"]
@@ -339,16 +467,22 @@ def build_index_row(
         "claim": args.claim,
         "params": args.param,
         "param_map": parse_pairs(args.param),
+        "model_context": model_context(args),
         "datasets": args.dataset,
         "seeds": args.seed,
         "metrics": args.metric,
         "metric_map": parse_pairs(args.metric),
         "artifacts": args.artifact,
+        "copied_configs": copied_configs,
+        "copied_artifacts": copied_artifacts,
         "tags": args.tag,
         "fairness_notes": args.fairness_note,
         "result": args.result,
         "next_steps": args.next_steps,
+        "experiment_dir": rel_path(experiment_dir, root),
         "record_path": rel_path(record_path, root),
+        "metrics_path": rel_path(metrics_path, root),
+        "artifacts_manifest_path": rel_path(artifacts_manifest_path, root),
         "stdout_path": rel_path(stdout_path, root) if stdout_path else "",
         "stderr_path": rel_path(stderr_path, root) if stderr_path else "",
         "git": git,
@@ -423,10 +557,25 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--command", default="", help="Command text to record without executing it.")
     parser.add_argument("--param", action="append", default=[], help="Parameter/config item, e.g. lr=0.001.")
+    parser.add_argument("--experiment-type", default="", help="Experiment type, e.g. pretrain, eval, ablation.")
+    parser.add_argument("--model-base", default="", help="Base model or initialization checkpoint.")
+    parser.add_argument("--model-size", default="", help="Model size, e.g. 1B, 7B, 70B.")
+    parser.add_argument("--checkpoint", default="", help="Produced or evaluated checkpoint path/version.")
+    parser.add_argument("--data-mix", default="", help="Training/eval data mixture name.")
+    parser.add_argument("--data-version", default="", help="Data version or snapshot id.")
+    parser.add_argument("--tokenizer", default="", help="Tokenizer version.")
+    parser.add_argument("--train-tokens", default="", help="Training token budget, e.g. 50B.")
+    parser.add_argument("--global-batch-size", default="", help="Global batch size, preferably in tokens.")
+    parser.add_argument("--learning-rate", default="", help="Learning rate or schedule peak.")
+    parser.add_argument("--schedule", default="", help="Training schedule or optimizer schedule.")
+    parser.add_argument("--compute", default="", help="Compute/runtime description, e.g. 64xA100, 8h.")
+    parser.add_argument("--eval-suite", default="", help="Evaluation suite/version.")
     parser.add_argument("--dataset", action="append", default=[], help="Dataset/source version, e.g. dataset=v2.")
     parser.add_argument("--seed", action="append", default=[], help="Random seed or split identifier.")
     parser.add_argument("--metric", action="append", default=[], help="Metric item, e.g. accuracy=0.91.")
     parser.add_argument("--artifact", action="append", default=[], help="Artifact path or URL.")
+    parser.add_argument("--config-file", action="append", default=[], help="Config file to copy into the experiment bundle.")
+    parser.add_argument("--artifact-file", action="append", default=[], help="Artifact file to copy into the experiment bundle.")
     parser.add_argument("--tag", action="append", default=[], help="Free-form tag for later grouping.")
     parser.add_argument("--fairness-note", action="append", default=[], help="Fairness/reproducibility note.")
     parser.add_argument("--result", default="", help="Result summary or conclusion.")
@@ -434,6 +583,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--notes", default="", help="Additional notes.")
     parser.add_argument("--cwd", default=".", help="Working directory relative to the repository root.")
     parser.add_argument("--timeout", type=int, default=0, help="Optional command timeout in seconds.")
+    parser.add_argument("--no-duplicate-check", action="store_true", help="Do not warn about similar indexed experiments.")
     parser.add_argument("--no-index", action="store_true", help="Do not append to experiments/index.jsonl.")
     parser.add_argument("--no-progress", action="store_true", help="Do not append to progress.md.")
     parser.add_argument("run_command", nargs=argparse.REMAINDER, help="Optional command to execute after --.")
@@ -449,6 +599,9 @@ def main() -> int:
         print(f"[ERROR] Working directory does not exist: {cwd}", file=sys.stderr)
         return 2
 
+    command_text = shlex.join(command) if command else args.command.strip()
+    warn_similar_experiments(root, args, command_text)
+
     run = run_command(command, cwd, args.timeout) if command else None
     status = args.status
     if not status:
@@ -457,12 +610,12 @@ def main() -> int:
         else:
             status = "passed" if run["exit_code"] == 0 else "failed"
 
-    command_text = shlex.join(command) if command else args.command.strip()
     created_at = now_utc()
     record_id = f"{created_at.strftime('%Y%m%d-%H%M%S')}-{slugify(args.title)}"
     experiments_dir = root / "harness" / "verification" / "experiments"
-    artifacts_dir = experiments_dir / "artifacts"
-    experiments_dir.mkdir(parents=True, exist_ok=True)
+    experiment_dir = experiments_dir / record_id
+    artifacts_dir = experiment_dir / "artifacts"
+    experiment_dir.mkdir(parents=True, exist_ok=True)
     artifacts_dir.mkdir(parents=True, exist_ok=True)
 
     git = git_metadata(root)
@@ -472,12 +625,34 @@ def main() -> int:
     stdout_path = None
     stderr_path = None
     if run is not None:
-        stdout_name = write_if_present(artifacts_dir / f"{record_id}.stdout.log", run["stdout"])
-        stderr_name = write_if_present(artifacts_dir / f"{record_id}.stderr.log", run["stderr"])
+        stdout_name = write_if_present(artifacts_dir / "stdout.log", run["stdout"])
+        stderr_name = write_if_present(artifacts_dir / "stderr.log", run["stderr"])
         stdout_path = artifacts_dir / stdout_name if stdout_name else None
         stderr_path = artifacts_dir / stderr_name if stderr_name else None
 
-    record_path = experiments_dir / f"{record_id}.md"
+    copied_configs = copy_resource_files(root, experiment_dir, args.config_file, "configs")
+    copied_artifacts = copy_resource_files(root, experiment_dir, args.artifact_file, "artifacts")
+    artifacts_manifest_path = write_artifacts_manifest(
+        experiment_dir / "artifacts.md",
+        args.artifact,
+        copied_artifacts,
+        copied_configs,
+    )
+    metrics_path = write_json(
+        experiment_dir / "metrics.json",
+        {
+            "metrics": args.metric,
+            "metric_map": parse_pairs(args.metric),
+            "params": args.param,
+            "param_map": parse_pairs(args.param),
+            "model_context": model_context(args),
+            "datasets": args.dataset,
+            "seeds": args.seed,
+            "tags": args.tag,
+        },
+    )
+
+    record_path = experiment_dir / "record.md"
     record_text = build_record(
         args=args,
         root=root,
@@ -491,6 +666,9 @@ def main() -> int:
         git=git,
         env=env,
         author=author,
+        copied_configs=copied_configs,
+        copied_artifacts=copied_artifacts,
+        metrics_path=metrics_path,
     )
     record_path.write_text(record_text, encoding="utf-8")
 
@@ -509,6 +687,11 @@ def main() -> int:
             git=git,
             env=env,
             author=author,
+            experiment_dir=experiment_dir,
+            metrics_path=metrics_path,
+            artifacts_manifest_path=artifacts_manifest_path,
+            copied_configs=copied_configs,
+            copied_artifacts=copied_artifacts,
         )
         index_path = append_index(root, row)
 

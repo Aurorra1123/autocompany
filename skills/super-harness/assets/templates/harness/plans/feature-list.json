@@ -35,7 +35,8 @@
       "存在结构化任务清单并带通过状态",
       "存在 `harness/verification/README.md` 说明验证证据存放规范",
       "存在 `harness/scripts/record_experiment.py` 和 `harness/verification/experiments/README.md` 说明实验记录方式",
-      "存在 `harness/scripts/compare_experiments.py` 和 `harness/verification/comparisons/README.md` 说明跨实验对比方式"
+      "存在 `harness/scripts/compare_experiments.py` 和 `harness/verification/comparisons/README.md` 说明跨实验对比方式",
+      "存在 `harness/scripts/promote_finding.py` 和 `harness/verification/findings/README.md` 说明审核结论晋升方式"
     ],
     "passes": false,
     "owner": ""

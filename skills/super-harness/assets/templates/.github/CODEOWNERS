@@ -1,0 +1,7 @@
+# Suggested harness governance owners.
+# Replace these placeholders with real GitHub teams or users after bootstrapping.
+
+harness/verification/findings/ @model-reviewers
+harness/verification/comparisons/ @model-reviewers
+harness/standards/ @tech-leads
+harness/architecture/adr/ @tech-leads

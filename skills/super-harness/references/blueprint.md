@@ -18,8 +18,12 @@ Create a repository-local execution layer for long-running agent and human colla
   Store phase-level execution plans that decompose the backlog.
 - `harness/scripts/record_experiment.py`
   Run or summarize experiments, benchmarks, training runs, evaluations, and key validation commands while writing durable records.
+- `harness/scripts/harness_run.py`
+  Thin standard entrypoint that delegates to the recorder, so teams can standardize experiment execution.
 - `harness/scripts/compare_experiments.py`
   Create comparison records from multiple experiment records and summarize fairness checks.
+- `harness/scripts/promote_finding.py`
+  Promote reviewed comparisons into durable findings.
 - `harness/standards/`
   Store durable engineering rules, git workflow, harness rules, and deployment baseline.
 - `harness/architecture/`
@@ -34,6 +38,10 @@ Create a repository-local execution layer for long-running agent and human colla
   Store machine-readable experiment rows for agent summarization and filtering.
 - `harness/verification/comparisons/`
   Store reviewed or provisional comparison conclusions that link back to concrete experiment evidence.
+- `harness/verification/findings/`
+  Store reviewed, rejected, superseded, or provisional findings that the team can treat as governed conclusions.
+- `.github/CODEOWNERS`
+  Optional governance template for protecting findings, standards, and ADRs with PR review.
 - `harness/reference/`
   Store source material, imports, screenshots, legacy notes, PDFs, and raw background documents.
 
@@ -44,6 +52,7 @@ Create a repository-local execution layer for long-running agent and human colla
 - Generate project-specific architecture content
 - Monitor shell activity automatically without the agent or user invoking the recorder
 - Decide fairness automatically without human or agent review of dataset, seed, metric, and commit comparability
+- Enforce GitHub branch protection by itself; the generated CODEOWNERS file must be adapted and enabled in the repository host
 - Update CI, deployment, or application code
 
 ## Adaptation Checklist
@@ -59,7 +68,7 @@ After bootstrapping, update these files first:
 4. `harness/verification/experiments/README.md`
    Confirm the experiment fields and examples match the repository's domain, then start using `harness/scripts/record_experiment.py` for future experimental work.
 5. `harness/verification/comparisons/README.md`
-   Confirm what counts as a reviewed comparison and how provisional findings should be promoted.
+   Confirm what counts as a reviewed comparison and how provisional conclusions should be promoted.
 6. `harness/standards/deployment-baseline.md`
    Fill in actual environment, domain, secret, and runtime constraints.
 7. `harness/architecture/adr/0001-*.md` and `harness/architecture/adr/0002-*.md`
@@ -81,5 +90,6 @@ If the target already has documentation:
 - Create the first repository-specific execution plan in `harness/plans/exec-plan/`
 - Capture the real architecture baseline in `harness/architecture/`
 - Add at least one verification artifact before changing any backlog item to passing
-- Run the next experiment through `harness/scripts/record_experiment.py` so progress and evidence are linked automatically
+- Run the next experiment through `harness/scripts/harness_run.py` so progress and evidence are linked automatically
 - Generate the first comparison with `harness/scripts/compare_experiments.py` when two comparable experiments exist
+- Promote the first reviewed conclusion with `harness/scripts/promote_finding.py`

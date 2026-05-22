@@ -29,12 +29,12 @@
 - 遇到重复性错误时，补规则、模板或脚本，不只补口头提醒
 - 不依赖隐性上下文，例如个人记忆、外部文档链接或临时聊天结论
 - 修改范围保持最小化，避免一次引入多个不相关变化
-- 运行实验、benchmark、模型训练、评测、压测或关键验证命令时，优先使用 `harness/scripts/record_experiment.py` 包住命令并自动落盘
+- 运行实验、benchmark、模型训练、评测、压测或关键验证命令时，优先使用 `harness/scripts/harness_run.py` 包住命令并自动落盘
 
 示例：
 
 ```bash
-python3 harness/scripts/record_experiment.py \
+python3 harness/scripts/harness_run.py \
   --title "baseline smoke test" \
   --goal "验证当前实现的最小可用性" \
   --result "记录命令退出状态、关键输出和下一步" \
@@ -56,7 +56,7 @@ python3 harness/scripts/record_experiment.py \
 - 同一条任务的 `owner` 字段表明当前认领人；其他人想接手时先在 progress 里说明
 - ADR 文件名建议带日期前缀（如 `0003-20260521-xxx.md`）以避免不同分支撞编号
 - 出现合并冲突时，优先合并双方的 progress 记录，再处理 feature-list 状态行
-- 多人实验默认允许在各自分支产生独立 `experiments/*.md`；经过 review 的共识结论应沉淀到 `comparisons/*.md`
+- 多人实验默认允许在各自分支产生独立 `experiments/<id>/record.md`；经过 review 的共识结论应沉淀到 `findings/<id>/finding.md`
 - 对比结论必须引用具体实验 record id 或路径，并检查 author、branch、commit、source dirty、dataset、seed 和 metric 定义是否可比
 
 ## 验证证据
@@ -70,6 +70,7 @@ python3 harness/scripts/record_experiment.py \
 - 命令行、自测与压测验证，优先保存关键输出摘要、报告文件或日志片段
 - 如果命令已经执行过，仍应使用 `record_experiment.py --command "..." --result "..."` 补录目标、参数、指标、产物和结论
 - 如果要形成“方法 A 优于方法 B”这类结论，必须使用 `compare_experiments.py` 或同等结构记录 evidence 和 fairness check
+- 如果要形成团队可复用 solid conclusion，必须使用 `promote_finding.py` 从 reviewed comparison 晋升
 - 只有在存在可追溯验证证据时，才允许将测试项或功能项改为通过
 - 进度记录中应注明本次验证所依赖的命令、结果和证据位置
 
@@ -90,6 +91,7 @@ python3 harness/scripts/record_experiment.py \
 - 会话交接和阶段进展放在 `harness/plans/progress.md`
 - 实验过程、指标和输出放在 `harness/verification/experiments/`
 - 对比结论和审核后的实验判断放在 `harness/verification/comparisons/`
+- 审核后的团队结论放在 `harness/verification/findings/`
 - 原始输入材料保留在 `harness/reference/`
 
 ## 反模式

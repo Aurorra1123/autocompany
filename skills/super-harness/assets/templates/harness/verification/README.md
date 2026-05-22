@@ -22,22 +22,31 @@
 ## 建议结构
 
 - 一般验证可按日期建立子目录，例如 `2026-04-16/`
-- 实验记录统一放入 `experiments/`，命令输出放入 `experiments/artifacts/`
+- 实验记录统一放入 `experiments/<experiment-id>/`，命令输出放入每个实验目录下的 `artifacts/`
 - 跨实验对比结论统一放入 `comparisons/`
+- 审核后的 solid finding 统一放入 `findings/`
 
 示例：
 
 ```text
 harness/verification/
 ├── experiments/
-│   ├── 20260416-101530-baseline-smoke-test.md
 │   ├── index.jsonl
-│   └── artifacts/
-│       ├── 20260416-101530-baseline-smoke-test.stdout.log
-│       └── 20260416-101530-baseline-smoke-test.stderr.log
+│   └── 20260416-101530-baseline-smoke-test/
+│       ├── record.md
+│       ├── metrics.json
+│       ├── artifacts.md
+│       ├── configs/
+│       └── artifacts/
+│           ├── stdout.log
+│           └── stderr.log
 ├── comparisons/
 │   ├── 20260416-120000-baseline-vs-tuned-config.md
 │   └── index.jsonl
+├── findings/
+│   ├── index.jsonl
+│   └── 20260416-130000-data-mix-b-improves-math/
+│       └── finding.md
 └── 2026-04-16/
     └── auth-flow/
         ├── api-check.txt
@@ -49,9 +58,14 @@ harness/verification/
 运行实验、benchmark、训练或关键验证命令时，优先用脚本包住命令：
 
 ```bash
-python3 harness/scripts/record_experiment.py \
+python3 harness/scripts/harness_run.py \
   --title "baseline smoke test" \
   --goal "确认当前实现是否通过最小回归" \
+  --experiment-type "eval" \
+  --model-base "1b-pretrain-v0" \
+  --data-mix "mix-a" \
+  --data-version "data-2026-05-20" \
+  --eval-suite "core-eval-v2" \
   --dataset "dataset=sample-v1" \
   --seed "seed=42" \
   --metric "passed=12/12" \
@@ -73,7 +87,7 @@ python3 harness/scripts/record_experiment.py \
   --result "dropout=0.2 优于 baseline"
 ```
 
-脚本会自动记录 author、branch、commit、dirty worktree、source dirty、平台和 Python 版本，并追加 `experiments/index.jsonl`。
+脚本会自动记录 author、branch、commit、dirty worktree、source dirty、平台和 Python 版本，创建独立实验资源目录，并追加 `experiments/index.jsonl`。
 
 ## 实验对比脚本
 
@@ -82,6 +96,7 @@ python3 harness/scripts/record_experiment.py \
 ```bash
 python3 harness/scripts/compare_experiments.py \
   --title "baseline vs tuned config" \
+  --status reviewed \
   --claim "tuned config improves F1 on dataset=v2" \
   --evidence 20260416-101530-baseline-smoke-test \
   --evidence 20260416-113000-tuned-config \
@@ -90,15 +105,34 @@ python3 harness/scripts/compare_experiments.py \
   --result "Tuned config is better under the recorded setup, pending review."
 ```
 
+## Finding 晋升脚本
+
+经过审核的结论应从 comparison 晋升，不应直接手写：
+
+```bash
+python3 harness/scripts/promote_finding.py \
+  --title "data mix b improves math at 1b scale" \
+  --comparison 20260416-120000-baseline-vs-tuned-config \
+  --status reviewed \
+  --reviewer "Model Reviewer <reviewer@example.com>" \
+  --limitation "Only verified at 1B scale" \
+  --conclusion "Data mix B improves math eval but slightly regresses code eval."
+```
+
+默认情况下，`reviewed` finding 只能从 `reviewed` comparison 晋升。
+
 ## 证据类型
 
 - `*.png` / `*.jpg`：页面截图
 - `*.txt` / `*.log`：命令输出摘要、测试输出、部署结果
 - `*.md`：人工验证记录与结论
-- `experiments/*.md`：实验目标、命令、参数、指标、溯源信息、结论和下一步
+- `experiments/<id>/record.md`：实验目标、命令、参数、指标、溯源信息、结论和下一步
+- `experiments/<id>/metrics.json`：机器可读指标、参数、模型上下文和标签
 - `experiments/index.jsonl`：机器可读实验索引，供 agent 汇总、筛选和对比
 - `comparisons/*.md`：跨实验对比结论，必须链接到具体实验证据
 - `comparisons/index.jsonl`：机器可读对比索引
+- `findings/<id>/finding.md`：审核后的结论，必须链接到 comparison
+- `findings/index.jsonl`：机器可读结论索引
 - 外部录屏或报告链接：建议附一份同名 `*.md` 说明链接与上下文
 
 ## 使用规则
@@ -107,5 +141,6 @@ python3 harness/scripts/compare_experiments.py \
 - 回归失败时，应在证据目录追加失败记录，而不是只在聊天中说明
 - 证据文件名应包含日期、主题和验证动作，避免使用无意义名称
 - 进度记录中应引用对应证据目录或文件
-- 对实验型任务，进度记录中应引用 `experiments/*.md`，不要只写最终结论
+- 对实验型任务，进度记录中应引用 `experiments/<id>/record.md`，不要只写最终结论
 - 对比型结论应引用 `comparisons/*.md`，并说明 dataset、seed、commit、metric 定义和 source dirty 状态是否一致
+- solid conclusion 应引用 `findings/*.md`，并通过 PR review 或 CODEOWNERS 规则保护

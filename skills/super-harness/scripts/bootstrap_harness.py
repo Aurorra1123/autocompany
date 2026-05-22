@@ -20,8 +20,10 @@ CORE_OPS = (
     TemplateOp("harness/plans/feature-list.json", "harness/plans/feature-list.json"),
     TemplateOp("harness/plans/progress.md", "harness/plans/progress.md"),
     TemplateOp("harness/plans/exec-plan/README.md", "harness/plans/exec-plan/README.md"),
+    TemplateOp("harness/scripts/harness_run.py", "harness/scripts/harness_run.py"),
     TemplateOp("harness/scripts/record_experiment.py", "harness/scripts/record_experiment.py"),
     TemplateOp("harness/scripts/compare_experiments.py", "harness/scripts/compare_experiments.py"),
+    TemplateOp("harness/scripts/promote_finding.py", "harness/scripts/promote_finding.py"),
     TemplateOp("harness/standards/engineering-rules.md", "harness/standards/engineering-rules.md"),
     TemplateOp("harness/standards/git-workflow.md", "harness/standards/git-workflow.md"),
     TemplateOp("harness/standards/agent-harness-rules.md", "harness/standards/agent-harness-rules.md"),
@@ -39,7 +41,9 @@ CORE_OPS = (
     TemplateOp("harness/verification/README.md", "harness/verification/README.md"),
     TemplateOp("harness/verification/experiments/README.md", "harness/verification/experiments/README.md"),
     TemplateOp("harness/verification/comparisons/README.md", "harness/verification/comparisons/README.md"),
+    TemplateOp("harness/verification/findings/README.md", "harness/verification/findings/README.md"),
     TemplateOp("harness/reference/README.md", "harness/reference/README.md"),
+    TemplateOp(".github/CODEOWNERS", ".github/CODEOWNERS", "if_missing"),
 )
 
 # AGENTS.md is the canonical entrypoint, shared by Codex and the OpenAI Agents SDK.

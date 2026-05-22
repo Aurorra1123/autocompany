@@ -1,6 +1,6 @@
 ---
 name: super-harness
-description: Bootstrap a repository-level "super harness" for long-running agent and human collaboration, so durable team knowledge, experiment progress, comparisons, and verification evidence live in the repo rather than individual chat history. Use when initializing or normalizing the harness structure in a new or messy repository, especially to add `harness/plans/feature-list.json`, `harness/plans/progress.md`, `harness/scripts/record_experiment.py`, `harness/scripts/compare_experiments.py`, `harness/standards/`, `harness/architecture/adr/`, `harness/verification/experiments/`, `harness/verification/comparisons/`, `harness/reference/`, and the agent entrypoints (`AGENTS.md` plus IDE-specific stubs for Claude Code, Cursor, etc.) that keep durable knowledge out of chat.
+description: Bootstrap a repository-level "super harness" for long-running agent and human collaboration, so durable team knowledge, experiment progress, comparisons, reviewed findings, and verification evidence live in the repo rather than individual chat history. Use when initializing or normalizing the harness structure in a new or messy repository, especially to add `harness/plans/feature-list.json`, `harness/plans/progress.md`, `harness/scripts/harness_run.py`, `harness/scripts/record_experiment.py`, `harness/scripts/compare_experiments.py`, `harness/scripts/promote_finding.py`, `harness/standards/`, `harness/architecture/adr/`, `harness/verification/experiments/`, `harness/verification/comparisons/`, `harness/verification/findings/`, `.github/CODEOWNERS`, `harness/reference/`, and the agent entrypoints (`AGENTS.md` plus IDE-specific stubs for Claude Code, Cursor, etc.) that keep durable knowledge out of chat.
 ---
 
 # Super Harness
@@ -33,10 +33,10 @@ Initialize a reusable harness that treats the repository as the team's durable m
 5. For experiment-heavy work, use the generated recorder.
 
    ```bash
-   python3 harness/scripts/record_experiment.py --title "baseline smoke test" -- pytest -q
+   python3 harness/scripts/harness_run.py --title "baseline smoke test" -- pytest -q
    ```
 
-   The recorder writes `harness/verification/experiments/*.md`, captures stdout/stderr artifacts, appends `experiments/index.jsonl`, records git/environment provenance, and appends a progress summary. It does not monitor the shell by itself; agents should wrap experiment, benchmark, training, evaluation, or key validation commands with it whenever practical.
+   The recorder writes `harness/verification/experiments/<id>/record.md`, captures stdout/stderr artifacts, appends `experiments/index.jsonl`, records git/environment provenance, writes a per-experiment resource bundle, and appends a progress summary. It does not monitor the shell by itself; agents should wrap experiment, benchmark, training, evaluation, or key validation commands with it whenever practical.
 6. For cross-branch or cross-author claims, generate a comparison.
 
    ```bash
@@ -44,7 +44,14 @@ Initialize a reusable harness that treats the repository as the team's durable m
    ```
 
    Comparisons write `harness/verification/comparisons/*.md`, include evidence links and fairness checks, and are the preferred place to solidify reviewed conclusions.
-7. Validate the result.
+7. Promote reviewed findings when a conclusion is accepted.
+
+   ```bash
+   python3 harness/scripts/promote_finding.py --title "accepted result" --comparison <comparison-id>
+   ```
+
+   Findings write `harness/verification/findings/<id>/finding.md` and should be protected by PR review/CODEOWNERS in shared repositories.
+8. Validate the result.
    Read the created files, confirm skipped files are expected, and make sure the harness reflects the repository's actual state before treating it as the new baseline.
 
 ## Existing Repositories

@@ -9,6 +9,7 @@
 ```bash
 python3 harness/scripts/compare_experiments.py \
   --title "baseline vs tuned config" \
+  --status reviewed \
   --claim "tuned config improves F1 on dataset=v2" \
   --evidence 20260522-101500-baseline \
   --evidence 20260522-112000-tuned-config \
@@ -25,7 +26,7 @@ python3 harness/scripts/compare_experiments.py \
 
 ## 审核重点
 
-- 对比结论必须引用具体 `experiments/*.md` 或 record id。
+- 对比结论必须引用具体 `experiments/<id>/record.md` 或 record id。
 - 优先比较相同 dataset、seed、metric 定义和相近 commit base 的实验。
 - 如果任一实验记录显示 `source_dirty=true`，对比结论默认应标为 provisional。
 - 经过 review 后再把 comparison 状态从 `provisional` 改成 `reviewed`。
