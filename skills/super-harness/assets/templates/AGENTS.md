@@ -19,6 +19,7 @@
 - 任务状态写入 `harness/plans/feature-list.json`
 - 验证证据写入 `harness/verification/`
 - 实验过程和结果写入 `harness/verification/experiments/`
+- 跨实验对比结论写入 `harness/verification/comparisons/`
 - 原始资料和外部输入放在 `harness/reference/`
 
 ## 执行规则
@@ -27,6 +28,7 @@
 - 不要把关键背景只留在聊天中
 - 未验证前不要标记任务完成
 - 运行实验、benchmark、训练、评测或关键验证命令时，优先使用 `python3 harness/scripts/record_experiment.py --title "..." -- <command>` 记录
+- 对比不同人或不同分支的实验时，使用 `python3 harness/scripts/compare_experiments.py --title "..." --evidence <record-id-or-path> ...` 生成带依据链接的结论
 - 发现重复性问题时，优先补规则、模板或脚本
 - 如目标较大，先给出方案，再执行
 

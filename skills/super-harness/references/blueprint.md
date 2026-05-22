@@ -18,6 +18,8 @@ Create a repository-local execution layer for long-running agent and human colla
   Store phase-level execution plans that decompose the backlog.
 - `harness/scripts/record_experiment.py`
   Run or summarize experiments, benchmarks, training runs, evaluations, and key validation commands while writing durable records.
+- `harness/scripts/compare_experiments.py`
+  Create comparison records from multiple experiment records and summarize fairness checks.
 - `harness/standards/`
   Store durable engineering rules, git workflow, harness rules, and deployment baseline.
 - `harness/architecture/`
@@ -27,7 +29,11 @@ Create a repository-local execution layer for long-running agent and human colla
 - `harness/verification/`
   Store evidence that justifies changing status to passing.
 - `harness/verification/experiments/`
-  Store experiment records, key metrics, command status, stdout/stderr artifacts, and follow-up notes.
+  Store experiment records, key metrics, command status, git/environment provenance, stdout/stderr artifacts, and follow-up notes.
+- `harness/verification/experiments/index.jsonl`
+  Store machine-readable experiment rows for agent summarization and filtering.
+- `harness/verification/comparisons/`
+  Store reviewed or provisional comparison conclusions that link back to concrete experiment evidence.
 - `harness/reference/`
   Store source material, imports, screenshots, legacy notes, PDFs, and raw background documents.
 
@@ -37,6 +43,7 @@ Create a repository-local execution layer for long-running agent and human colla
 - Replace an already-mature harness without review
 - Generate project-specific architecture content
 - Monitor shell activity automatically without the agent or user invoking the recorder
+- Decide fairness automatically without human or agent review of dataset, seed, metric, and commit comparability
 - Update CI, deployment, or application code
 
 ## Adaptation Checklist
@@ -51,9 +58,11 @@ After bootstrapping, update these files first:
    Rewrite the initial entry so it matches the current repository baseline instead of the generic scaffold message.
 4. `harness/verification/experiments/README.md`
    Confirm the experiment fields and examples match the repository's domain, then start using `harness/scripts/record_experiment.py` for future experimental work.
-5. `harness/standards/deployment-baseline.md`
+5. `harness/verification/comparisons/README.md`
+   Confirm what counts as a reviewed comparison and how provisional findings should be promoted.
+6. `harness/standards/deployment-baseline.md`
    Fill in actual environment, domain, secret, and runtime constraints.
-6. `harness/architecture/adr/0001-*.md` and `harness/architecture/adr/0002-*.md`
+7. `harness/architecture/adr/0001-*.md` and `harness/architecture/adr/0002-*.md`
    Keep them if the repository really follows repo-as-memory and harness-first workflow. Add new ADRs for repository-specific decisions.
 
 ## Merge Strategy for Existing Repositories
@@ -73,3 +82,4 @@ If the target already has documentation:
 - Capture the real architecture baseline in `harness/architecture/`
 - Add at least one verification artifact before changing any backlog item to passing
 - Run the next experiment through `harness/scripts/record_experiment.py` so progress and evidence are linked automatically
+- Generate the first comparison with `harness/scripts/compare_experiments.py` when two comparable experiments exist

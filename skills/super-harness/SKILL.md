@@ -1,13 +1,13 @@
 ---
 name: super-harness
-description: Bootstrap a repository-level "super harness" for long-running agent and human collaboration, so durable team knowledge, experiment progress, and verification evidence live in the repo rather than individual chat history. Use when initializing or normalizing the harness structure in a new or messy repository, especially to add `harness/plans/feature-list.json`, `harness/plans/progress.md`, `harness/scripts/record_experiment.py`, `harness/standards/`, `harness/architecture/adr/`, `harness/verification/experiments/`, `harness/reference/`, and the agent entrypoints (`AGENTS.md` plus IDE-specific stubs for Claude Code, Cursor, etc.) that keep durable knowledge out of chat.
+description: Bootstrap a repository-level "super harness" for long-running agent and human collaboration, so durable team knowledge, experiment progress, comparisons, and verification evidence live in the repo rather than individual chat history. Use when initializing or normalizing the harness structure in a new or messy repository, especially to add `harness/plans/feature-list.json`, `harness/plans/progress.md`, `harness/scripts/record_experiment.py`, `harness/scripts/compare_experiments.py`, `harness/standards/`, `harness/architecture/adr/`, `harness/verification/experiments/`, `harness/verification/comparisons/`, `harness/reference/`, and the agent entrypoints (`AGENTS.md` plus IDE-specific stubs for Claude Code, Cursor, etc.) that keep durable knowledge out of chat.
 ---
 
 # Super Harness
 
 ## Overview
 
-Initialize a reusable harness that treats the repository as the team's durable memory instead of relying on each contributor's individual agent chat history. The bundled script scaffolds a `harness/` execution layer, creates a lightweight `AGENTS.md` entrypoint, adds an experiment recorder, and (optionally) emits stubs for IDE-specific agent files (Claude Code's `CLAUDE.md`, Cursor's `.cursor/rules/super-harness.mdc`) so that anyone in the team can open the repo with their own agent and immediately recover the shared context.
+Initialize a reusable harness that treats the repository as the team's durable memory instead of relying on each contributor's individual agent chat history. The bundled script scaffolds a `harness/` execution layer, creates a lightweight `AGENTS.md` entrypoint, adds experiment recording and comparison tools, and (optionally) emits stubs for IDE-specific agent files (Claude Code's `CLAUDE.md`, Cursor's `.cursor/rules/super-harness.mdc`) so that anyone in the team can open the repo with their own agent and immediately recover the shared context.
 
 ## Workflow
 
@@ -36,8 +36,15 @@ Initialize a reusable harness that treats the repository as the team's durable m
    python3 harness/scripts/record_experiment.py --title "baseline smoke test" -- pytest -q
    ```
 
-   The recorder writes `harness/verification/experiments/*.md`, captures stdout/stderr artifacts, and appends a progress summary. It does not monitor the shell by itself; agents should wrap experiment, benchmark, training, evaluation, or key validation commands with it whenever practical.
-6. Validate the result.
+   The recorder writes `harness/verification/experiments/*.md`, captures stdout/stderr artifacts, appends `experiments/index.jsonl`, records git/environment provenance, and appends a progress summary. It does not monitor the shell by itself; agents should wrap experiment, benchmark, training, evaluation, or key validation commands with it whenever practical.
+6. For cross-branch or cross-author claims, generate a comparison.
+
+   ```bash
+   python3 harness/scripts/compare_experiments.py --title "baseline vs tuned config" --evidence <record-id>
+   ```
+
+   Comparisons write `harness/verification/comparisons/*.md`, include evidence links and fairness checks, and are the preferred place to solidify reviewed conclusions.
+7. Validate the result.
    Read the created files, confirm skipped files are expected, and make sure the harness reflects the repository's actual state before treating it as the new baseline.
 
 ## Existing Repositories

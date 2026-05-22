@@ -1,4 +1,4 @@
 interface:
   display_name: "Super Harness"
-  short_description: "Bootstrap shared repo memory with experiment tracking"
-  default_prompt: "Use $super-harness to initialize a team-shared harness and experiment tracking in this repository."
+  short_description: "Bootstrap shared repo memory with experiment tracking and comparisons"
+  default_prompt: "Use $super-harness to initialize a team-shared harness with experiment tracking and comparison records in this repository."

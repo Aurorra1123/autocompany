@@ -56,15 +56,20 @@ python3 harness/scripts/record_experiment.py \
 - 同一条任务的 `owner` 字段表明当前认领人；其他人想接手时先在 progress 里说明
 - ADR 文件名建议带日期前缀（如 `0003-20260521-xxx.md`）以避免不同分支撞编号
 - 出现合并冲突时，优先合并双方的 progress 记录，再处理 feature-list 状态行
+- 多人实验默认允许在各自分支产生独立 `experiments/*.md`；经过 review 的共识结论应沉淀到 `comparisons/*.md`
+- 对比结论必须引用具体实验 record id 或路径，并检查 author、branch、commit、source dirty、dataset、seed 和 metric 定义是否可比
 
 ## 验证证据
 
 - 验证结论不能只留在聊天记录中，必须落到仓库可追踪工件
 - 验证证据默认放在 `harness/verification/`
 - 实验记录默认放在 `harness/verification/experiments/`，命令输出自动放在 `harness/verification/experiments/artifacts/`
+- 实验索引默认追加到 `harness/verification/experiments/index.jsonl`，便于 agent 汇总和比较
+- 跨实验对比默认放在 `harness/verification/comparisons/`，并追加 `comparisons/index.jsonl`
 - 前端、E2E 或交互流程验证，优先保存截图、录屏链接或报告摘要
 - 命令行、自测与压测验证，优先保存关键输出摘要、报告文件或日志片段
 - 如果命令已经执行过，仍应使用 `record_experiment.py --command "..." --result "..."` 补录目标、参数、指标、产物和结论
+- 如果要形成“方法 A 优于方法 B”这类结论，必须使用 `compare_experiments.py` 或同等结构记录 evidence 和 fairness check
 - 只有在存在可追溯验证证据时，才允许将测试项或功能项改为通过
 - 进度记录中应注明本次验证所依赖的命令、结果和证据位置
 
@@ -84,6 +89,7 @@ python3 harness/scripts/record_experiment.py \
 - 任务状态放在 `harness/plans/feature-list.json`
 - 会话交接和阶段进展放在 `harness/plans/progress.md`
 - 实验过程、指标和输出放在 `harness/verification/experiments/`
+- 对比结论和审核后的实验判断放在 `harness/verification/comparisons/`
 - 原始输入材料保留在 `harness/reference/`
 
 ## 反模式
