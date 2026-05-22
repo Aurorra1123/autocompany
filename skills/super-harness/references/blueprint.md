@@ -16,6 +16,8 @@ Create a repository-local execution layer for long-running agent and human colla
   Record session handoff notes, current state, and next-step suggestions.
 - `harness/plans/exec-plan/`
   Store phase-level execution plans that decompose the backlog.
+- `harness/scripts/record_experiment.py`
+  Run or summarize experiments, benchmarks, training runs, evaluations, and key validation commands while writing durable records.
 - `harness/standards/`
   Store durable engineering rules, git workflow, harness rules, and deployment baseline.
 - `harness/architecture/`
@@ -24,6 +26,8 @@ Create a repository-local execution layer for long-running agent and human colla
   Store important architecture and workflow decisions (ADRs).
 - `harness/verification/`
   Store evidence that justifies changing status to passing.
+- `harness/verification/experiments/`
+  Store experiment records, key metrics, command status, stdout/stderr artifacts, and follow-up notes.
 - `harness/reference/`
   Store source material, imports, screenshots, legacy notes, PDFs, and raw background documents.
 
@@ -32,6 +36,7 @@ Create a repository-local execution layer for long-running agent and human colla
 - Infer the repository's real business roadmap automatically
 - Replace an already-mature harness without review
 - Generate project-specific architecture content
+- Monitor shell activity automatically without the agent or user invoking the recorder
 - Update CI, deployment, or application code
 
 ## Adaptation Checklist
@@ -44,9 +49,11 @@ After bootstrapping, update these files first:
    Replace the generic bootstrap backlog with the repository's actual delivery roadmap.
 3. `harness/plans/progress.md`
    Rewrite the initial entry so it matches the current repository baseline instead of the generic scaffold message.
-4. `harness/standards/deployment-baseline.md`
+4. `harness/verification/experiments/README.md`
+   Confirm the experiment fields and examples match the repository's domain, then start using `harness/scripts/record_experiment.py` for future experimental work.
+5. `harness/standards/deployment-baseline.md`
    Fill in actual environment, domain, secret, and runtime constraints.
-5. `harness/architecture/adr/0001-*.md` and `harness/architecture/adr/0002-*.md`
+6. `harness/architecture/adr/0001-*.md` and `harness/architecture/adr/0002-*.md`
    Keep them if the repository really follows repo-as-memory and harness-first workflow. Add new ADRs for repository-specific decisions.
 
 ## Merge Strategy for Existing Repositories
@@ -65,3 +72,4 @@ If the target already has documentation:
 - Create the first repository-specific execution plan in `harness/plans/exec-plan/`
 - Capture the real architecture baseline in `harness/architecture/`
 - Add at least one verification artifact before changing any backlog item to passing
+- Run the next experiment through `harness/scripts/record_experiment.py` so progress and evidence are linked automatically

@@ -8,6 +8,7 @@
 
 - 初始化 `{{PROJECT_NAME}}` 的 harness 骨架
 - 新增 `plans/`（含 `progress.md`、`feature-list.json`、`exec-plan/`）、`standards/`、`architecture/`（含 `adr/`）、`verification/`、`reference/` 基础目录与模板
+- 新增 `harness/scripts/record_experiment.py` 和 `harness/verification/experiments/`，用于记录实验命令、输出、指标和结论
 - 如仓库原先缺少 `AGENTS.md`，已创建最小入口文件
 
 ### 当前状态
@@ -15,6 +16,7 @@
 - 当前内容仍是 bootstrap 基线，需要按 `{{PROJECT_NAME}}` 的真实业务、技术栈和交付目标继续改写
 - `feature-list` 仍是通用初始化任务，尚未替换为真实路线图
 - `reference/` 仍待补充仓库现有输入材料
+- 实验 tracking 规则已就位，但需要在后续真实实验中开始产生记录
 
 ### 下一步建议
 
@@ -22,6 +24,7 @@
 2. 根据当前仓库真实目标改写 `harness/plans/feature-list.json`
 3. 补齐 `harness/standards/` 中的环境、部署和协作规则
 4. 根据仓库实际情况补第一轮架构文档和执行计划
+5. 下次实验或 benchmark 使用 `python3 harness/scripts/record_experiment.py --title "..." -- <command>` 记录
 
 ### 注意事项
 
