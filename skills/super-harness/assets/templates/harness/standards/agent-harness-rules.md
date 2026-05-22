@@ -29,6 +29,17 @@
 - 遇到重复性错误时，补规则、模板或脚本，不只补口头提醒
 - 不依赖隐性上下文，例如个人记忆、外部文档链接或临时聊天结论
 - 修改范围保持最小化，避免一次引入多个不相关变化
+- 运行实验、benchmark、模型训练、评测、压测或关键验证命令时，优先使用 `harness/scripts/record_experiment.py` 包住命令并自动落盘
+
+示例：
+
+```bash
+python3 harness/scripts/record_experiment.py \
+  --title "baseline smoke test" \
+  --goal "验证当前实现的最小可用性" \
+  --result "记录命令退出状态、关键输出和下一步" \
+  -- pytest -q
+```
 
 ## 完成判定
 
@@ -50,8 +61,10 @@
 
 - 验证结论不能只留在聊天记录中，必须落到仓库可追踪工件
 - 验证证据默认放在 `harness/verification/`
+- 实验记录默认放在 `harness/verification/experiments/`，命令输出自动放在 `harness/verification/experiments/artifacts/`
 - 前端、E2E 或交互流程验证，优先保存截图、录屏链接或报告摘要
 - 命令行、自测与压测验证，优先保存关键输出摘要、报告文件或日志片段
+- 如果命令已经执行过，仍应使用 `record_experiment.py --command "..." --result "..."` 补录目标、参数、指标、产物和结论
 - 只有在存在可追溯验证证据时，才允许将测试项或功能项改为通过
 - 进度记录中应注明本次验证所依赖的命令、结果和证据位置
 
@@ -59,7 +72,7 @@
 
 - 已更新 `harness/plans/progress.md`
 - 已更新对应任务或测试项的通过状态
-- 已记录本次验证证据或明确说明缺失原因
+- 已记录本次验证/实验证据或明确说明缺失原因
 - 工作区无未提交改动
 - 当前应用仍处于可继续工作状态；如果存在阻塞，必须在进度记录中说明
 
@@ -70,6 +83,7 @@
 - 阶段计划放在 `harness/plans/exec-plan/`
 - 任务状态放在 `harness/plans/feature-list.json`
 - 会话交接和阶段进展放在 `harness/plans/progress.md`
+- 实验过程、指标和输出放在 `harness/verification/experiments/`
 - 原始输入材料保留在 `harness/reference/`
 
 ## 反模式

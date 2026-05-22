@@ -9,9 +9,10 @@
 
 - `reference/`：需求原文、PDF、截图、旧文档、外部导出资料
 - `plans/`：任务清单（`feature-list.json`）、会话进度日志（`progress.md`）、阶段执行计划（`exec-plan/`）
+- `scripts/`：协作自动化脚本，例如实验记录器 `record_experiment.py`
 - `standards/`：长期有效的工程规则、协作规则、部署基线
 - `architecture/`：正式技术方案、架构图、环境核查；其中 `architecture/adr/` 存放架构与流程决策记录
-- `verification/`：验证证据、测试摘要、截图和回归结果
+- `verification/`：验证证据、实验记录、测试摘要、截图和回归结果
 
 ## 推荐工作流
 
@@ -19,7 +20,7 @@
 2. 盘点已有资料并整理到 `reference/`
 3. 确认当前最高优先级且边界清晰的目标
 4. 小步修改
-5. 保存最小必要验证证据
+5. 保存最小必要验证证据；实验或 benchmark 优先用 `python3 harness/scripts/record_experiment.py --title "..." -- <command>` 包住命令
 6. 更新进度文档与任务状态
 7. 提交 git commit 并保持仓库可继续工作
 
