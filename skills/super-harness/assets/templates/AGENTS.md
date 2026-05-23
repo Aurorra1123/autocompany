@@ -6,6 +6,8 @@
 
 ## 开始工作前
 
+- 先阅读 `harness/project/brief.md`
+- 先阅读 `harness/ideas/index.jsonl`
 - 先阅读 `harness/plans/progress.md`
 - 先阅读 `harness/plans/feature-list.json`
 - 如仓库已有最近 git 历史，先确认当前基线
@@ -13,6 +15,8 @@
 
 ## 文档落位
 
+- repo-level 目标、边界和成功标准写入 `harness/project/brief.md`
+- idea、hypothesis、baseline、variant 和成功标准写入 `harness/ideas/`
 - 长期规则写入 `harness/standards/`
 - 重要决策写入 `harness/architecture/adr/`
 - 会话交接写入 `harness/plans/progress.md`
@@ -20,6 +24,7 @@
 - 验证证据写入 `harness/verification/`
 - 实验过程和结果写入 `harness/verification/experiments/`
 - 跨实验对比结论写入 `harness/verification/comparisons/`
+- 审核后的团队结论写入 `harness/verification/findings/`
 - 原始资料和外部输入放在 `harness/reference/`
 
 ## 执行规则
@@ -28,6 +33,7 @@
 - 不要把关键背景只留在聊天中
 - 未验证前不要标记任务完成
 - 运行实验、benchmark、训练、评测或关键验证命令时，优先使用 `python3 harness/scripts/harness_run.py --title "..." -- <command>` 记录
+- 实验如属于某个 idea，记录时使用 `--tag idea=IDEA-001` 或在结果说明中引用 idea ID
 - 对比不同人或不同分支的实验时，使用 `python3 harness/scripts/compare_experiments.py --title "..." --evidence <record-id-or-path> ...` 生成带依据链接的结论
 - 审核后的 solid conclusion 必须用 `python3 harness/scripts/promote_finding.py --title "..." --comparison <comparison-id>` 晋升到 findings
 - 发现重复性问题时，优先补规则、模板或脚本

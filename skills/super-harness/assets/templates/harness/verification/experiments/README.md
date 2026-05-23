@@ -10,6 +10,7 @@
 python3 harness/scripts/harness_run.py \
   --title "baseline smoke test" \
   --goal "确认当前实现是否能通过最小回归" \
+  --tag "idea=IDEA-001" \
   --experiment-type "eval" \
   --model-base "1b-pretrain-v0" \
   --data-mix "mix-a" \
@@ -37,6 +38,7 @@ python3 harness/scripts/harness_run.py \
 ## 记录要求
 
 - 每次实验至少记录目标、命令、状态、结果和下一步。
+- 如果实验服务于某个 idea 或 hypothesis，使用 `--tag "idea=IDEA-001"` 或在 `--goal` / `--result` 中引用 idea ID。
 - 关键指标使用 `--metric "name=value"` 追加。
 - 基础模型实验应记录 `--model-base`、`--model-size`、`--data-mix`、`--data-version`、`--tokenizer`、`--train-tokens`、`--eval-suite` 等控制变量。
 - 数据、样本、评测集或输入版本使用 `--dataset "name=version"` 追加。

@@ -10,6 +10,16 @@ Create a repository-local execution layer for long-running agent and human colla
   Create only when missing. Keep it short. Use it as an entrypoint and constraint file, not as a full knowledge base.
 - `harness/README.md`
   Explain the harness layout and the default workflow.
+- `harness/project/`
+  Store the repo-level goal, current focus, non-goals, users, constraints, and success criteria.
+- `harness/project/brief.md`
+  Act as the first file a new contributor or agent reads to understand what the repository is trying to accomplish.
+- `harness/ideas/`
+  Store ideas, hypotheses, baselines, variants, controls, success criteria, and idea status.
+- `harness/ideas/index.jsonl`
+  Store machine-readable idea rows for agent summarization, deduplication, and linking to evidence.
+- `harness/ideas/idea-template.md`
+  Provide the standard shape for new validation ideas.
 - `harness/plans/feature-list.json`
   Keep a structured backlog with acceptance criteria and passing status.
 - `harness/plans/progress.md`
@@ -48,6 +58,7 @@ Create a repository-local execution layer for long-running agent and human colla
 ## What This Skill Does Not Do
 
 - Infer the repository's real business roadmap automatically
+- Decide the repository's true project goal or idea backlog without human review
 - Replace an already-mature harness without review
 - Generate project-specific architecture content
 - Monitor shell activity automatically without the agent or user invoking the recorder
@@ -61,17 +72,21 @@ After bootstrapping, update these files first:
 
 1. `AGENTS.md`
    Align language, approval rules, environment management, and safety constraints with the user or team.
-2. `harness/plans/feature-list.json`
+2. `harness/project/brief.md`
+   Replace the starter brief with the repository's real goal, current focus, non-goals, users, constraints, and success criteria.
+3. `harness/ideas/index.jsonl` and `harness/ideas/idea-template.md`
+   Replace the starter idea row with the first concrete idea, hypothesis, or validation direction.
+4. `harness/plans/feature-list.json`
    Replace the generic bootstrap backlog with the repository's actual delivery roadmap.
-3. `harness/plans/progress.md`
+5. `harness/plans/progress.md`
    Rewrite the initial entry so it matches the current repository baseline instead of the generic scaffold message.
-4. `harness/verification/experiments/README.md`
+6. `harness/verification/experiments/README.md`
    Confirm the experiment fields and examples match the repository's domain, then start using `harness/scripts/record_experiment.py` for future experimental work.
-5. `harness/verification/comparisons/README.md`
+7. `harness/verification/comparisons/README.md`
    Confirm what counts as a reviewed comparison and how provisional conclusions should be promoted.
-6. `harness/standards/deployment-baseline.md`
+8. `harness/standards/deployment-baseline.md`
    Fill in actual environment, domain, secret, and runtime constraints.
-7. `harness/architecture/adr/0001-*.md` and `harness/architecture/adr/0002-*.md`
+9. `harness/architecture/adr/0001-*.md` and `harness/architecture/adr/0002-*.md`
    Keep them if the repository really follows repo-as-memory and harness-first workflow. Add new ADRs for repository-specific decisions.
 
 ## Merge Strategy for Existing Repositories
@@ -87,6 +102,8 @@ If the target already has documentation:
 ## Suggested First Follow-Up Tasks
 
 - Inventory existing source materials and move them under `harness/reference/` or link them clearly
+- Rewrite `harness/project/brief.md` so it names the repository's real goal, boundaries, and success criteria
+- Add the first concrete idea or hypothesis to `harness/ideas/index.jsonl`
 - Create the first repository-specific execution plan in `harness/plans/exec-plan/`
 - Capture the real architecture baseline in `harness/architecture/`
 - Add at least one verification artifact before changing any backlog item to passing

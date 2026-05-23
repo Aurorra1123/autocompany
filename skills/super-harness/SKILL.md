@@ -1,13 +1,13 @@
 ---
 name: super-harness
-description: Bootstrap a repository-level "super harness" for long-running agent and human collaboration, so durable team knowledge, experiment progress, comparisons, reviewed findings, and verification evidence live in the repo rather than individual chat history. Use when initializing or normalizing the harness structure in a new or messy repository, especially to add `harness/plans/feature-list.json`, `harness/plans/progress.md`, `harness/scripts/harness_run.py`, `harness/scripts/record_experiment.py`, `harness/scripts/compare_experiments.py`, `harness/scripts/promote_finding.py`, `harness/standards/`, `harness/architecture/adr/`, `harness/verification/experiments/`, `harness/verification/comparisons/`, `harness/verification/findings/`, `.github/CODEOWNERS`, `harness/reference/`, and the agent entrypoints (`AGENTS.md` plus IDE-specific stubs for Claude Code, Cursor, etc.) that keep durable knowledge out of chat.
+description: Bootstrap a repository-level "super harness" for long-running agent and human collaboration, so project goals, ideas, experiment progress, comparisons, reviewed findings, and verification evidence live in the repo rather than individual chat history. Use when initializing or normalizing the harness structure in a new or messy repository, especially to add `harness/project/`, `harness/ideas/`, `harness/plans/feature-list.json`, `harness/plans/progress.md`, `harness/scripts/harness_run.py`, `harness/scripts/record_experiment.py`, `harness/scripts/compare_experiments.py`, `harness/scripts/promote_finding.py`, `harness/standards/`, `harness/architecture/adr/`, `harness/verification/experiments/`, `harness/verification/comparisons/`, `harness/verification/findings/`, `.github/CODEOWNERS`, `harness/reference/`, and agent entrypoints.
 ---
 
 # Super Harness
 
 ## Overview
 
-Initialize a reusable harness that treats the repository as the team's durable memory instead of relying on each contributor's individual agent chat history. The bundled script scaffolds a `harness/` execution layer, creates a lightweight `AGENTS.md` entrypoint, adds experiment recording and comparison tools, and (optionally) emits stubs for IDE-specific agent files (Claude Code's `CLAUDE.md`, Cursor's `.cursor/rules/super-harness.mdc`) so that anyone in the team can open the repo with their own agent and immediately recover the shared context.
+Initialize a reusable harness that treats the repository as the team's durable memory instead of relying on each contributor's individual agent chat history. The bundled script scaffolds a `harness/` layer for repo-level project context, idea validation, execution plans, experiment recording, comparison tools, and reviewed findings. It also creates a lightweight `AGENTS.md` entrypoint and optional IDE-specific stubs so that anyone in the team can open the repo with their own agent and immediately recover the shared context.
 
 ## Workflow
 
@@ -29,7 +29,7 @@ Initialize a reusable harness that treats the repository as the team's durable m
    - Use `--ide auto|claude|cursor|codex|all|none` to control which IDE-specific stubs are generated. `auto` (default) detects existing markers (`CLAUDE.md`, `.claude/`, `.cursor/`, `AGENTS.md`) and only emits the missing ones; `all` forces every supported stub; `none` skips all stubs.
    - Use `--force` only when you have already reviewed the target files and intentionally want to overwrite them.
 4. Tailor the generated files immediately.
-   Replace bootstrap placeholders with the repository's real roadmap, architecture baseline, deployment constraints, and collaboration rules. The generated `feature-list.json` is a starting point, not a final backlog.
+   Replace bootstrap placeholders with the repository's real project brief, idea backlog, roadmap, architecture baseline, deployment constraints, and collaboration rules. The generated `project/brief.md`, `ideas/index.jsonl`, and `feature-list.json` are starting points, not final project truth.
 5. For experiment-heavy work, use the generated recorder.
 
    ```bash
@@ -64,4 +64,4 @@ Initialize a reusable harness that treats the repository as the team's durable m
 
 - `scripts/bootstrap_harness.py`: create the scaffold, support dry-run mode, detect target IDE, and avoid overwriting by default.
 - `references/blueprint.md`: explain the generated structure, adaptation checklist, and merge strategy for existing repositories.
-- `assets/templates/`: store the scaffold templates copied into target repositories, including IDE-specific stub templates under `assets/templates/ide-stubs/`.
+- `assets/templates/`: store the scaffold templates copied into target repositories, including `harness/project/`, `harness/ideas/`, and IDE-specific stub templates under `assets/templates/ide-stubs/`.

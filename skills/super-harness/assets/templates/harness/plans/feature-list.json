@@ -6,7 +6,9 @@
     "description": "建立 harness 目录结构与导航入口",
     "acceptance": [
       "存在 `harness/README.md` 并说明 harness 分层",
-      "存在 `plans/`、`standards/`、`architecture/`、`verification/`、`reference/` 五个执行/输入目录",
+      "存在 `project/`、`ideas/`、`plans/`、`standards/`、`architecture/`、`verification/`、`reference/` 等核心目录",
+      "`harness/project/brief.md` 说明 repo-level 目标、非目标、成功标准和约束",
+      "`harness/ideas/` 提供 idea registry 和 idea template",
       "如仓库缺少 `AGENTS.md`，已补最小入口文件"
     ],
     "passes": false,
@@ -73,6 +75,8 @@
     "priority": "P1",
     "description": "将通用模板替换为 `{{PROJECT_NAME}}` 的真实路线图",
     "acceptance": [
+      "`harness/project/brief.md` 已替换为真实项目背景",
+      "`harness/ideas/index.jsonl` 已替换为真实 idea 或 hypothesis 索引",
       "当前任务清单反映真实业务或工程目标",
       "优先级、验收标准和通过状态不再停留在模板层",
       "新会话无需回看旧聊天即可恢复主线"

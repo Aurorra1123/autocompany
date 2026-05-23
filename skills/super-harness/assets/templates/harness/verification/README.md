@@ -61,6 +61,7 @@ harness/verification/
 python3 harness/scripts/harness_run.py \
   --title "baseline smoke test" \
   --goal "确认当前实现是否通过最小回归" \
+  --tag "idea=IDEA-001" \
   --experiment-type "eval" \
   --model-base "1b-pretrain-v0" \
   --data-mix "mix-a" \
@@ -80,6 +81,7 @@ python3 harness/scripts/harness_run.py \
 python3 harness/scripts/record_experiment.py \
   --title "manual ablation review" \
   --command "python train.py --ablation dropout" \
+  --tag "idea=IDEA-001" \
   --param "dropout=0.2" \
   --dataset "dataset=v2" \
   --seed "seed=42" \
@@ -141,6 +143,7 @@ python3 harness/scripts/promote_finding.py \
 - 回归失败时，应在证据目录追加失败记录，而不是只在聊天中说明
 - 证据文件名应包含日期、主题和验证动作，避免使用无意义名称
 - 进度记录中应引用对应证据目录或文件
+- 服务于具体 idea 的实验应引用 `harness/ideas/index.jsonl` 中的 idea ID
 - 对实验型任务，进度记录中应引用 `experiments/<id>/record.md`，不要只写最终结论
 - 对比型结论应引用 `comparisons/*.md`，并说明 dataset、seed、commit、metric 定义和 source dirty 状态是否一致
 - solid conclusion 应引用 `findings/*.md`，并通过 PR review 或 CODEOWNERS 规则保护
