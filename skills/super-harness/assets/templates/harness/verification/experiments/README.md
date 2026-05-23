@@ -4,13 +4,32 @@
 
 ## 推荐方式
 
-优先使用仓库内置统一入口包住实验命令：
+优先使用仓库内置统一入口包住实验命令。主路径是通用 idea validation；模型、算法、产品、系统性能或工程方案验证都应先记录 idea、baseline、variant、控制变量和指标。
 
 ```bash
 python3 harness/scripts/harness_run.py \
-  --title "baseline smoke test" \
-  --goal "确认当前实现是否能通过最小回归" \
+  --title "cache strategy benchmark" \
+  --goal "验证新的 cache 策略是否降低接口 p95 延迟" \
   --tag "idea=IDEA-001" \
+  --experiment-type "benchmark" \
+  --param "baseline=cache-v1" \
+  --param "variant=cache-v2" \
+  --param "traffic_profile=checkout-read-heavy" \
+  --dataset "requests=replay-2026-05-20" \
+  --metric "p95_latency_ms=184" \
+  --metric "error_rate=0.01%" \
+  --result "cache-v2 在相同 traffic profile 下 p95 延迟下降 18%" \
+  --next "扩大到写多读少场景" \
+  -- python3 benchmarks/cache_latency.py --strategy cache-v2
+```
+
+如果是基础模型或 ML 实验，可以额外补充领域控制变量：
+
+```bash
+python3 harness/scripts/harness_run.py \
+  --title "eval suite smoke test" \
+  --goal "验证新数据配比是否提升 core eval" \
+  --tag "idea=IDEA-002" \
   --experiment-type "eval" \
   --model-base "1b-pretrain-v0" \
   --data-mix "mix-a" \
@@ -18,10 +37,9 @@ python3 harness/scripts/harness_run.py \
   --eval-suite "core-eval-v2" \
   --dataset "dataset=sample-v1" \
   --seed "seed=42" \
-  --metric "passed=12/12" \
-  --result "最小回归通过，可继续下一步" \
-  --next "扩大测试数据集" \
-  -- pytest -q
+  --metric "score=0.84" \
+  --result "新数据配比在 core eval 上优于 baseline" \
+  -- python3 eval.py --suite core-eval-v2
 ```
 
 脚本会自动创建：
@@ -40,7 +58,8 @@ python3 harness/scripts/harness_run.py \
 - 每次实验至少记录目标、命令、状态、结果和下一步。
 - 如果实验服务于某个 idea 或 hypothesis，使用 `--tag "idea=IDEA-001"` 或在 `--goal` / `--result` 中引用 idea ID。
 - 关键指标使用 `--metric "name=value"` 追加。
-- 基础模型实验应记录 `--model-base`、`--model-size`、`--data-mix`、`--data-version`、`--tokenizer`、`--train-tokens`、`--eval-suite` 等控制变量。
+- 通用控制变量可用 `--param "baseline=..."`、`--param "variant=..."`、`--param "config=..."`、`--dataset "input=..."`、`--seed "seed=..."` 记录。
+- 基础模型或 ML 实验可以额外记录 `--model-base`、`--model-size`、`--data-mix`、`--data-version`、`--tokenizer`、`--train-tokens`、`--eval-suite` 等领域控制变量。
 - 数据、样本、评测集或输入版本使用 `--dataset "name=version"` 追加。
 - 随机种子、split、prompt 版本等影响公平性的变量使用 `--seed`、`--param` 或 `--fairness-note` 追加。
 - 外部产物、图表、模型权重或报告路径使用 `--artifact` 追加；本地文件使用 `--artifact-file` 或 `--config-file` 复制进实验目录。

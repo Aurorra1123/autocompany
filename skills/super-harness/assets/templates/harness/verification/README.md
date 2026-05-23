@@ -41,11 +41,11 @@ harness/verification/
 │           ├── stdout.log
 │           └── stderr.log
 ├── comparisons/
-│   ├── 20260416-120000-baseline-vs-tuned-config.md
+│   ├── 20260416-120000-cache-v1-vs-cache-v2.md
 │   └── index.jsonl
 ├── findings/
 │   ├── index.jsonl
-│   └── 20260416-130000-data-mix-b-improves-math/
+│   └── 20260416-130000-cache-v2-reduces-p95-latency/
 │       └── finding.md
 └── 2026-04-16/
     └── auth-flow/
@@ -55,39 +55,40 @@ harness/verification/
 
 ## 实验记录脚本
 
-运行实验、benchmark、训练或关键验证命令时，优先用脚本包住命令：
+运行实验、benchmark、训练或关键验证命令时，优先用脚本包住命令。主示例使用通用 idea validation，避免把 harness 限定为模型研发工具：
 
 ```bash
 python3 harness/scripts/harness_run.py \
-  --title "baseline smoke test" \
-  --goal "确认当前实现是否通过最小回归" \
+  --title "cache strategy benchmark" \
+  --goal "验证新的 cache 策略是否降低接口 p95 延迟" \
   --tag "idea=IDEA-001" \
-  --experiment-type "eval" \
-  --model-base "1b-pretrain-v0" \
-  --data-mix "mix-a" \
-  --data-version "data-2026-05-20" \
-  --eval-suite "core-eval-v2" \
-  --dataset "dataset=sample-v1" \
-  --seed "seed=42" \
-  --metric "passed=12/12" \
-  --result "最小回归通过" \
-  --next "扩大测试数据集" \
-  -- pytest -q
+  --experiment-type "benchmark" \
+  --param "baseline=cache-v1" \
+  --param "variant=cache-v2" \
+  --param "traffic_profile=checkout-read-heavy" \
+  --dataset "requests=replay-2026-05-20" \
+  --metric "p95_latency_ms=184" \
+  --metric "error_rate=0.01%" \
+  --result "cache-v2 在相同 traffic profile 下 p95 延迟下降 18%" \
+  --next "扩大到写多读少场景" \
+  -- python3 benchmarks/cache_latency.py --strategy cache-v2
 ```
 
 如果实验已经执行过，使用 `--command` 和 `--result` 补录摘要：
 
 ```bash
 python3 harness/scripts/record_experiment.py \
-  --title "manual ablation review" \
-  --command "python train.py --ablation dropout" \
+  --title "manual cache benchmark review" \
+  --command "python3 benchmarks/cache_latency.py --strategy cache-v2" \
   --tag "idea=IDEA-001" \
-  --param "dropout=0.2" \
-  --dataset "dataset=v2" \
-  --seed "seed=42" \
-  --metric "f1=0.84" \
-  --result "dropout=0.2 优于 baseline"
+  --param "baseline=cache-v1" \
+  --param "variant=cache-v2" \
+  --dataset "requests=replay-2026-05-20" \
+  --metric "p95_latency_ms=184" \
+  --result "cache-v2 在相同输入回放下优于 baseline"
 ```
+
+基础模型或 ML 实验可以在同一套记录方式上额外补充 `--model-base`、`--data-mix`、`--tokenizer`、`--train-tokens`、`--eval-suite` 等领域控制变量。
 
 脚本会自动记录 author、branch、commit、dirty worktree、source dirty、平台和 Python 版本，创建独立实验资源目录，并追加 `experiments/index.jsonl`。
 
@@ -97,14 +98,14 @@ python3 harness/scripts/record_experiment.py \
 
 ```bash
 python3 harness/scripts/compare_experiments.py \
-  --title "baseline vs tuned config" \
+  --title "cache-v1 vs cache-v2" \
   --status reviewed \
-  --claim "tuned config improves F1 on dataset=v2" \
-  --evidence 20260416-101530-baseline-smoke-test \
-  --evidence 20260416-113000-tuned-config \
-  --metric "f1_delta=+0.03" \
-  --fairness-note "Both runs used dataset=v2 and seed=42" \
-  --result "Tuned config is better under the recorded setup, pending review."
+  --claim "cache-v2 reduces p95 latency under checkout-read-heavy traffic" \
+  --evidence 20260416-101530-cache-v1-benchmark \
+  --evidence 20260416-113000-cache-v2-benchmark \
+  --metric "p95_latency_delta=-18%" \
+  --fairness-note "Both runs used requests=replay-2026-05-20 and the same traffic profile" \
+  --result "cache-v2 is faster under the recorded setup, pending review."
 ```
 
 ## Finding 晋升脚本
@@ -113,12 +114,12 @@ python3 harness/scripts/compare_experiments.py \
 
 ```bash
 python3 harness/scripts/promote_finding.py \
-  --title "data mix b improves math at 1b scale" \
-  --comparison 20260416-120000-baseline-vs-tuned-config \
+  --title "cache-v2 reduces checkout p95 latency" \
+  --comparison 20260416-120000-cache-v1-vs-cache-v2 \
   --status reviewed \
-  --reviewer "Model Reviewer <reviewer@example.com>" \
-  --limitation "Only verified at 1B scale" \
-  --conclusion "Data mix B improves math eval but slightly regresses code eval."
+  --reviewer "Performance Reviewer <reviewer@example.com>" \
+  --limitation "Only verified on checkout-read-heavy replay traffic" \
+  --conclusion "cache-v2 reduces p95 latency by 18% without increasing recorded error rate."
 ```
 
 默认情况下，`reviewed` finding 只能从 `reviewed` comparison 晋升。
@@ -129,7 +130,7 @@ python3 harness/scripts/promote_finding.py \
 - `*.txt` / `*.log`：命令输出摘要、测试输出、部署结果
 - `*.md`：人工验证记录与结论
 - `experiments/<id>/record.md`：实验目标、命令、参数、指标、溯源信息、结论和下一步
-- `experiments/<id>/metrics.json`：机器可读指标、参数、模型上下文和标签
+- `experiments/<id>/metrics.json`：机器可读指标、参数、领域上下文和标签
 - `experiments/index.jsonl`：机器可读实验索引，供 agent 汇总、筛选和对比
 - `comparisons/*.md`：跨实验对比结论，必须链接到具体实验证据
 - `comparisons/index.jsonl`：机器可读对比索引
@@ -145,5 +146,5 @@ python3 harness/scripts/promote_finding.py \
 - 进度记录中应引用对应证据目录或文件
 - 服务于具体 idea 的实验应引用 `harness/ideas/index.jsonl` 中的 idea ID
 - 对实验型任务，进度记录中应引用 `experiments/<id>/record.md`，不要只写最终结论
-- 对比型结论应引用 `comparisons/*.md`，并说明 dataset、seed、commit、metric 定义和 source dirty 状态是否一致
+- 对比型结论应引用 `comparisons/*.md`，并说明 idea、输入数据、控制变量、commit、metric 定义和 source dirty 状态是否一致
 - solid conclusion 应引用 `findings/*.md`，并通过 PR review 或 CODEOWNERS 规则保护

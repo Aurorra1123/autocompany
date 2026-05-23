@@ -8,12 +8,12 @@
 
 ```bash
 python3 harness/scripts/promote_finding.py \
-  --title "data mix b improves math at 1b scale" \
-  --comparison 20260522-120000-data-mix-a-vs-b \
+  --title "cache-v2 reduces checkout p95 latency" \
+  --comparison 20260522-120000-cache-v1-vs-cache-v2 \
   --status reviewed \
-  --reviewer "Model Reviewer <reviewer@example.com>" \
-  --limitation "Only verified at 1B scale" \
-  --conclusion "Data mix B improves math eval but slightly regresses code eval."
+  --reviewer "Performance Reviewer <reviewer@example.com>" \
+  --limitation "Only verified on checkout-read-heavy replay traffic" \
+  --conclusion "cache-v2 reduces p95 latency by 18% without increasing recorded error rate."
 ```
 
 脚本会生成：
@@ -34,4 +34,4 @@ python3 harness/scripts/promote_finding.py \
 - finding 必须引用 comparison；不要直接从单个实验手写 solid conclusion。
 - `reviewed` finding 默认必须来自 `reviewed` comparison；只有 reviewer 明确接受时才使用 `--allow-provisional-comparison`。
 - 修改 `reviewed` finding 应通过 PR review。
-- 如果证据的 dataset、seed、eval suite、metric 或 source dirty 状态不可比，应保留 limitation。
+- 如果证据的 idea、输入数据、控制变量、metric 或 source dirty 状态不可比，应保留 limitation。
