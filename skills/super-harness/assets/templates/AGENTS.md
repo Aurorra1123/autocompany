@@ -6,6 +6,7 @@
 
 ## 开始工作前
 
+- 先阅读 `harness/onboarding/questions.md`
 - 先阅读 `harness/project/brief.md`
 - 先阅读 `harness/ideas/index.jsonl`
 - 先阅读 `harness/plans/progress.md`
@@ -15,6 +16,7 @@
 
 ## 文档落位
 
+- 首次接手仓库的问题、假设和输出落位规则写入 `harness/onboarding/`
 - repo-level 目标、边界和成功标准写入 `harness/project/brief.md`
 - idea、hypothesis、baseline、variant 和成功标准写入 `harness/ideas/`
 - 长期规则写入 `harness/standards/`
@@ -31,6 +33,8 @@
 
 - `AGENTS.md` 只做入口、约束和导航，不做完整知识库
 - 不要把关键背景只留在聊天中
+- 如果 `project/brief.md`、`ideas/index.jsonl` 或 `feature-list.json` 仍是模板内容，先按 `harness/onboarding/questions.md` 执行 guided onboarding
+- onboarding 时先扫描仓库，再一次问一个关键问题；确认后的答案必须写回 `project/`、`ideas/`、`plans/` 和 `progress.md`
 - 未验证前不要标记任务完成
 - 运行实验、benchmark、训练、评测或关键验证命令时，优先使用 `python3 harness/scripts/harness_run.py --title "..." -- <command>` 记录
 - 实验如属于某个 idea，记录时使用 `--tag idea=IDEA-001` 或在结果说明中引用 idea ID

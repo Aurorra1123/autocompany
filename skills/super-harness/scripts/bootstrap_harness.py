@@ -17,6 +17,8 @@ class TemplateOp(NamedTuple):
 
 CORE_OPS = (
     TemplateOp("harness/README.md", "harness/README.md"),
+    TemplateOp("harness/onboarding/README.md", "harness/onboarding/README.md"),
+    TemplateOp("harness/onboarding/questions.md", "harness/onboarding/questions.md"),
     TemplateOp("harness/project/README.md", "harness/project/README.md"),
     TemplateOp("harness/project/brief.md", "harness/project/brief.md"),
     TemplateOp("harness/ideas/README.md", "harness/ideas/README.md"),

@@ -1,7 +1,8 @@
 # Harness System
 
-本目录分为四类信息：
+本目录分为五类信息：
 
+- `onboarding/`：首次接手或初始化仓库时的问题清单和输出落位规则
 - `project/`：仓库最高层背景、目标、边界和成功标准
 - `ideas/`：待验证的 idea、hypothesis、baseline、variant 和成功标准
 - `reference/`：原始输入、历史资料和外部参考
@@ -9,6 +10,7 @@
 
 ## 目录说明
 
+- `onboarding/`：guided onboarding 问题清单，帮助 agent 先扫描 repo、再逐步确认项目目标和验证主线
 - `project/`：repo-level brief，回答当前仓库最终要完成什么、什么不是目标、如何判断成功
 - `ideas/`：idea registry 和 idea template，连接项目目标、任务拆解、实验和 reviewed finding
 - `reference/`：需求原文、PDF、截图、旧文档、外部导出资料
@@ -20,16 +22,18 @@
 
 ## 推荐工作流
 
-1. 先阅读 `project/brief.md`，确认 repo-level 目标和非目标
-2. 阅读 `ideas/index.jsonl`、`plans/progress.md` 和 `plans/feature-list.json`
-3. 盘点已有资料并整理到 `reference/`
-4. 确认当前最高优先级且边界清晰的 idea、任务或验证目标
-5. 小步修改
-6. 保存最小必要验证证据；实验或 benchmark 优先用 `python3 harness/scripts/harness_run.py --title "..." -- <command>` 包住命令
-7. 更新进度文档与任务状态
-8. 如需要比较不同实验，用 `python3 harness/scripts/compare_experiments.py --title "..." --evidence <record-id>` 生成对比结论
-9. 对经过审核的结论，用 `python3 harness/scripts/promote_finding.py --title "..." --comparison <comparison-id>` 晋升到 findings
-10. 提交 git commit 并保持仓库可继续工作
+1. 先阅读 `onboarding/questions.md`，扫描 repo 并判断项目背景是否仍是模板
+2. 阅读 `project/brief.md`，确认 repo-level 目标和非目标
+3. 阅读 `ideas/index.jsonl`、`plans/progress.md` 和 `plans/feature-list.json`
+4. 如目标、idea 或任务仍不清楚，按 onboarding 问题一次问一个关键问题，并把答案写回正式文件
+5. 盘点已有资料并整理到 `reference/`
+6. 确认当前最高优先级且边界清晰的 idea、任务或验证目标
+7. 小步修改
+8. 保存最小必要验证证据；实验或 benchmark 优先用 `python3 harness/scripts/harness_run.py --title "..." -- <command>` 包住命令
+9. 更新进度文档与任务状态
+10. 如需要比较不同实验，用 `python3 harness/scripts/compare_experiments.py --title "..." --evidence <record-id>` 生成对比结论
+11. 对经过审核的结论，用 `python3 harness/scripts/promote_finding.py --title "..." --comparison <comparison-id>` 晋升到 findings
+12. 提交 git commit 并保持仓库可继续工作
 
 ## 当前目标
 

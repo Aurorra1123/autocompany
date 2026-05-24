@@ -10,6 +10,10 @@ Create a repository-local execution layer for long-running agent and human colla
   Create only when missing. Keep it short. Use it as an entrypoint and constraint file, not as a full knowledge base.
 - `harness/README.md`
   Explain the harness layout and the default workflow.
+- `harness/onboarding/`
+  Store guided onboarding questions and output rules for turning an unclear repository into explicit project memory.
+- `harness/onboarding/questions.md`
+  Guide the agent to scan the repo, ask one key question at a time, and write confirmed answers into project, ideas, plans, and progress files.
 - `harness/project/`
   Store the repo-level goal, current focus, non-goals, users, constraints, and success criteria.
 - `harness/project/brief.md`
@@ -59,6 +63,7 @@ Create a repository-local execution layer for long-running agent and human colla
 
 - Infer the repository's real business roadmap automatically
 - Decide the repository's true project goal or idea backlog without human review
+- Replace guided conversation; onboarding questions are a workflow for the agent, not an unattended CLI wizard
 - Replace an already-mature harness without review
 - Generate project-specific architecture content
 - Monitor shell activity automatically without the agent or user invoking the recorder
@@ -72,21 +77,23 @@ After bootstrapping, update these files first:
 
 1. `AGENTS.md`
    Align language, approval rules, environment management, and safety constraints with the user or team.
-2. `harness/project/brief.md`
+2. `harness/onboarding/questions.md`
+   Use the question set to scan the repository, confirm project intent, identify the first idea or hypothesis, and record assumptions/open questions.
+3. `harness/project/brief.md`
    Replace the starter brief with the repository's real goal, current focus, non-goals, users, constraints, and success criteria.
-3. `harness/ideas/index.jsonl` and `harness/ideas/idea-template.md`
+4. `harness/ideas/index.jsonl` and `harness/ideas/idea-template.md`
    Replace the starter idea row with the first concrete idea, hypothesis, or validation direction.
-4. `harness/plans/feature-list.json`
+5. `harness/plans/feature-list.json`
    Replace the generic bootstrap backlog with the repository's actual delivery roadmap.
-5. `harness/plans/progress.md`
+6. `harness/plans/progress.md`
    Rewrite the initial entry so it matches the current repository baseline instead of the generic scaffold message.
-6. `harness/verification/experiments/README.md`
+7. `harness/verification/experiments/README.md`
    Confirm the experiment fields and examples match the repository's domain, then start using `harness/scripts/record_experiment.py` for future experimental work.
-7. `harness/verification/comparisons/README.md`
+8. `harness/verification/comparisons/README.md`
    Confirm what counts as a reviewed comparison and how provisional conclusions should be promoted.
-8. `harness/standards/deployment-baseline.md`
+9. `harness/standards/deployment-baseline.md`
    Fill in actual environment, domain, secret, and runtime constraints.
-9. `harness/architecture/adr/0001-*.md` and `harness/architecture/adr/0002-*.md`
+10. `harness/architecture/adr/0001-*.md` and `harness/architecture/adr/0002-*.md`
    Keep them if the repository really follows repo-as-memory and harness-first workflow. Add new ADRs for repository-specific decisions.
 
 ## Merge Strategy for Existing Repositories
@@ -102,6 +109,7 @@ If the target already has documentation:
 ## Suggested First Follow-Up Tasks
 
 - Inventory existing source materials and move them under `harness/reference/` or link them clearly
+- Complete guided onboarding from `harness/onboarding/questions.md` and record assumptions/open questions in `harness/plans/progress.md`
 - Rewrite `harness/project/brief.md` so it names the repository's real goal, boundaries, and success criteria
 - Add the first concrete idea or hypothesis to `harness/ideas/index.jsonl`
 - Create the first repository-specific execution plan in `harness/plans/exec-plan/`

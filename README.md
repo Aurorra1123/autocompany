@@ -34,6 +34,8 @@ target-repo/
 ├── CLAUDE.md                          # Claude Code 入口 → 指向 AGENTS.md
 ├── .cursor/rules/super-harness.mdc    # Cursor 入口 → 指向 AGENTS.md
 └── harness/
+    ├── onboarding/
+    │   └── questions.md              # 首次接手仓库时的引导问题
     ├── project/
     │   └── brief.md                   # repo-level 目标、边界和成功标准
     ├── ideas/
@@ -57,6 +59,7 @@ target-repo/
 
 - **多 IDE 入口自动检测**：`--ide auto` 默认根据已有标记（`CLAUDE.md`、`.claude/`、`.cursor/`、`AGENTS.md`）只补缺失的入口；空仓库则一次性生成全部三种入口。可用 `--ide all|none|claude,codex` 等手动覆盖。
 - **单一信息源**：所有 IDE 入口都是短 stub，统一指向 `AGENTS.md` 和 `harness/` 下的真实内容；规则改一处即可。
+- **guided onboarding**：`harness/onboarding/questions.md` 引导 agent 先扫描 repo，再一问一答补齐项目目标、idea、任务和证据计划。
 - **repo-level 背景**：`harness/project/brief.md` 记录仓库目标、非目标、当前重点、使用者、约束和成功标准。
 - **idea 验证索引**：`harness/ideas/` 记录 hypothesis、baseline、variant、控制变量和成功标准，避免实验只剩命令日志。
 - **任务状态闭环**：`feature-list.json` 里的 `passes` 字段必须有 `harness/verification/` 中的证据支撑，并在 `progress.md` 留下变更说明，才能改为通过。

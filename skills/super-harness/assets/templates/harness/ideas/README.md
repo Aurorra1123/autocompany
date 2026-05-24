@@ -11,6 +11,7 @@
 
 - 每个重要 idea 都应有稳定 ID，例如 `IDEA-001`。
 - idea 应先说明 hypothesis、baseline、variant、控制变量和成功标准，再进入实验。
+- 如果 idea 还不清楚，先按 `harness/onboarding/questions.md` 的 Idea Validation 部分逐步确认。
 - `feature-list.json` 用来拆任务；`ideas/` 用来说明为什么这些任务值得做。
 - 实验记录应引用相关 idea ID，例如 `--tag idea=IDEA-001` 或在记录中写明 `Idea: IDEA-001`。
 - idea 状态建议使用 `proposed`、`testing`、`validated`、`rejected`、`superseded`。

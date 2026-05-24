@@ -8,6 +8,7 @@
 
 ## 使用规则
 
-- 新 contributor 或 agent 进入仓库后，应先读 `brief.md`，再读 `harness/plans/progress.md` 和 `harness/plans/feature-list.json`。
+- 新 contributor 或 agent 进入仓库后，应先读 `harness/onboarding/questions.md` 和 `brief.md`，再读 `harness/plans/progress.md` 和 `harness/plans/feature-list.json`。
+- 如果 `brief.md` 仍是模板内容，先完成 guided onboarding，再开始大规模实现。
 - 当项目目标、阶段重点或非目标变化时，优先更新 `brief.md`，并在 `progress.md` 记录原因。
 - 不要把实验日志、临时结论或任务拆解写进这里；这些内容分别放入 `verification/` 和 `plans/`。
