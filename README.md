@@ -8,11 +8,11 @@
 
 AutoCompany 的目标是构建一套 repo-local 的协作与验证框架，让人和 AI Agent 在同一个仓库里持续推进复杂工作，而不是依赖分散的聊天记录。
 
-这个仓库最终要产出的是一个可复用、可安装、可复制到其他项目中的 **super-harness** skill。它会在目标仓库中生成一套标准结构，用来记录项目目标、idea 和 hypothesis、任务计划、执行进度、实验过程、对比分析、审核结论和长期工程规则。
+这个仓库最终要产出的是一个可复用、可安装、可复制到其他项目中的 **super-harness** skill。它会在目标仓库中生成一套标准结构，并通过 guided onboarding 引导 agent 先扫描 repo、再一问一答补齐项目目标、idea 和 hypothesis、任务计划、执行进度、实验过程、对比分析、审核结论和长期工程规则。
 
 它不限定于基础模型研发，也适用于任何需要验证 idea 的项目：例如实现一个新功能、比较两个技术方案、做 ablation、跑 benchmark、整理多人实验结论，或者把探索性方向沉淀成可审查的团队知识。
 
-最终判断这个 repo 是否成功，不是看它是否生成了一组文件，而是看它能否让一个新的人或新的 Agent 打开目标仓库后，快速知道：当前项目想完成什么、已经做过哪些尝试、哪些实验支持哪些结论、哪些结论经过 review、下一步应该继续验证什么。
+最终判断这个 repo 是否成功，不是看它是否生成了一组文件，而是看它能否让一个新的人或新的 Agent 打开目标仓库后，先完成一轮可靠 onboarding，然后快速知道：当前项目想完成什么、已经做过哪些尝试、哪些实验支持哪些结论、哪些结论经过 review、下一步应该继续验证什么。
 
 ## 解决什么问题
 
@@ -90,7 +90,14 @@ python3 skills/super-harness/scripts/bootstrap_harness.py /path/to/repo
 python3 skills/super-harness/scripts/bootstrap_harness.py --ide claude,codex /path/to/repo
 ```
 
-生成完成后，按照 [`skills/super-harness/references/blueprint.md`](./skills/super-harness/references/blueprint.md) 里的「Adaptation Checklist」把模板内容替换成你仓库的真实信息。
+生成完成后，先阅读目标仓库里的 `harness/onboarding/questions.md`。Agent 应先扫描 repo，再一次问一个关键问题，并把确认后的答案写回：
+
+- `harness/project/brief.md`
+- `harness/ideas/index.jsonl`
+- `harness/plans/feature-list.json`
+- `harness/plans/progress.md`
+
+随后按照 [`skills/super-harness/references/blueprint.md`](./skills/super-harness/references/blueprint.md) 里的「Adaptation Checklist」继续替换模板内容。
 
 ## 参考资料
 
