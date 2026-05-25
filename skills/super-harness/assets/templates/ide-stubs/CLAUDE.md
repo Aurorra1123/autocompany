@@ -5,7 +5,7 @@
 会话开始前请先阅读：
 
 - [`AGENTS.md`](./AGENTS.md) — 入口与协作规范
-- [`harness/plans/progress.md`](./harness/plans/progress.md) — 最近的会话进度
+- [`harness/plans/progress.md`](./harness/plans/progress.md) — 最近的 checkpoint / 交接索引
 - [`harness/plans/feature-list.json`](./harness/plans/feature-list.json) — 当前任务清单
 
 详细规则在 [`harness/standards/`](./harness/standards/) 与 [`harness/architecture/adr/`](./harness/architecture/adr/)。

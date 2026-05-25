@@ -31,5 +31,5 @@
 
 - 长期项目背景写在本文件，原始材料放在 `harness/reference/`。
 - 任务拆解和验收标准写在 `harness/plans/feature-list.json`。
-- 执行进展写在 `harness/plans/progress.md`。
+- 阶段性 checkpoint、交接摘要和影响后续方向的 open questions 写在 `harness/plans/progress.md`。
 - 实验证据、对比分析和审核结论写在 `harness/verification/`。

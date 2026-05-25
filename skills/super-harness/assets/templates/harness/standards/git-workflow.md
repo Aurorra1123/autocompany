@@ -8,7 +8,7 @@
 ## 提交原则
 
 - 一次提交只解决一个小问题
-- 提交必须对应可解释的进度变化
+- 提交必须对应可解释的任务、证据或 checkpoint 变化
 - 不把多个无关改动混进同一个提交
 
 ## 提交信息格式
@@ -23,7 +23,7 @@ type(scope): summary
 
 ```text
 docs(harness): bootstrap harness execution layer
-docs(progress): record repository baseline
+docs(progress): record repository checkpoint
 chore(repo): align AGENTS and standards
 ```
 
@@ -34,11 +34,11 @@ chore(repo): align AGENTS and standards
 3. 阅读 `harness/plans/feature-list.json`
 4. 选择一个任务推进
 5. 修改文件并自检
-6. 更新进度文档
+6. 如形成 milestone、handoff、重要结论或 blocker，更新 `progress.md` checkpoint
 7. 提交 git commit
 
 ## 禁止事项
 
 - 不要在没有说明的情况下一次提交大量无关文件
-- 不要跳过进度记录直接结束会话
+- 不要跳过必要的 checkpoint 交接直接结束会话
 - 不要把聊天中的关键决策留在聊天里而不写入仓库

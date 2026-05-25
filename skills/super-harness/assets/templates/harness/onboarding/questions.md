@@ -62,6 +62,6 @@ onboarding 结束后，agent 应更新：
 - `harness/project/brief.md`：真实项目目标、当前阶段、non-goals、users、success criteria、constraints。
 - `harness/ideas/index.jsonl`：至少一条真实 idea，或明确记录暂无可验证 idea。
 - `harness/plans/feature-list.json`：把 starter backlog 替换为当前 repo 的真实任务和验收标准。
-- `harness/plans/progress.md`：追加 onboarding 摘要、assumptions、open questions 和下一步。
+- `harness/plans/progress.md`：只追加一条简洁 onboarding checkpoint，包含 assumptions、open questions、下一步和证据链接。
 
 如果用户只给出部分信息，先写入已确认内容，并把未确认内容列为 open questions。

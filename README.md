@@ -43,7 +43,7 @@ target-repo/
     │   └── idea-template.md           # 新 idea 模板
     ├── plans/
     │   ├── feature-list.json          # 结构化任务清单，带通过状态和 owner
-    │   ├── progress.md                # 会话进度 / 交接记录
+    │   ├── progress.md                # 高层 checkpoint / 交接索引
     │   └── exec-plan/                 # 阶段性执行方案
     ├── standards/                     # 长期工程规则、git workflow、agent 规则
     ├── architecture/
@@ -62,9 +62,9 @@ target-repo/
 - **guided onboarding**：`harness/onboarding/questions.md` 引导 agent 先扫描 repo，再一问一答补齐项目目标、idea、任务和证据计划。
 - **repo-level 背景**：`harness/project/brief.md` 记录仓库目标、非目标、当前重点、使用者、约束和成功标准。
 - **idea 验证索引**：`harness/ideas/` 记录 hypothesis、baseline、variant、控制变量和成功标准，避免实验只剩命令日志。
-- **任务状态闭环**：`feature-list.json` 里的 `passes` 字段必须有 `harness/verification/` 中的证据支撑，并在 `progress.md` 留下变更说明，才能改为通过。
+- **任务状态闭环**：`feature-list.json` 里的 `passes` 字段必须有 `harness/verification/` 中的证据支撑；重要 milestone 或交接再写入 `progress.md`。
 - **实验到结论的证据链**：实验记录进入 `experiments/`，跨实验分析进入 `comparisons/`，审核后的团队结论进入 `findings/`。
-- **多人协作软约束**：每条任务带 `owner` 字段做软认领；ADR 文件名带日期前缀避免不同分支撞编号；冲突时优先合并 progress 记录。
+- **多人协作软约束**：每条任务带 `owner` 字段做软认领；ADR 文件名带日期前缀避免不同分支撞编号；冲突时优先合并有交接价值的 progress checkpoint。
 - **幂等**：默认 `if_missing`，不会覆盖已有文件；需要强覆盖时显式加 `--force`。
 
 ## 怎么用

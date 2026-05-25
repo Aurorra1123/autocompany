@@ -82,16 +82,21 @@ def append_progress(root: Path, args: argparse.Namespace, finding_path: Path) ->
     progress_path = root / "harness" / "plans" / "progress.md"
     progress_path.parent.mkdir(parents=True, exist_ok=True)
     if not progress_path.exists():
-        progress_path.write_text("# Agent Progress Log\n", encoding="utf-8")
+        progress_path.write_text("# Project Checkpoints\n", encoding="utf-8")
 
     entry = [
         "",
-        f"## {now_utc().date().isoformat()} Finding: {args.title}",
+        f"## {now_utc().date().isoformat()} Checkpoint: {args.title}",
         "",
-        f"- Status: `{args.status}`",
+        "### Summary",
+        "",
+        f"- Finding status: `{args.status}`",
+        f"- Conclusion: {single_line(args.conclusion)}",
+        "",
+        "### Links",
+        "",
         f"- Finding: `{rel_path(finding_path, root)}`",
         f"- Comparison: `{args.comparison}`",
-        f"- Conclusion: {single_line(args.conclusion)}",
         "",
     ]
     with progress_path.open("a", encoding="utf-8") as file:
@@ -205,7 +210,16 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Allow a reviewed finding from a non-reviewed comparison. Use only with explicit reviewer approval.",
     )
-    parser.add_argument("--no-progress", action="store_true", help="Do not append to progress.md.")
+    parser.add_argument(
+        "--progress-checkpoint",
+        action="store_true",
+        help="Append a concise checkpoint to progress.md. Default is to keep progress.md unchanged.",
+    )
+    parser.add_argument(
+        "--no-progress",
+        action="store_true",
+        help="Deprecated compatibility flag. progress.md is not updated unless --progress-checkpoint is passed.",
+    )
     return parser
 
 
@@ -230,7 +244,7 @@ def main() -> int:
     finding_path = write_finding(root, args, finding_id, finding_dir, comparison)
     index_path = append_index(root, args, finding_id, finding_path, comparison)
 
-    if not args.no_progress:
+    if args.progress_checkpoint and not args.no_progress:
         append_progress(root, args, finding_path)
 
     print(f"[FINDING] {rel_path(finding_path, root)}")

@@ -21,7 +21,7 @@
 - idea、hypothesis、baseline、variant 和成功标准写入 `harness/ideas/`
 - 长期规则写入 `harness/standards/`
 - 重要决策写入 `harness/architecture/adr/`
-- 会话交接写入 `harness/plans/progress.md`
+- 高层 checkpoint、阶段交接、重要风险和 open questions 写入 `harness/plans/progress.md`
 - 任务状态写入 `harness/plans/feature-list.json`
 - 验证证据写入 `harness/verification/`
 - 实验过程和结果写入 `harness/verification/experiments/`
@@ -33,6 +33,7 @@
 
 - `AGENTS.md` 只做入口、约束和导航，不做完整知识库
 - 不要把关键背景只留在聊天中
+- `progress.md` 是 checkpoint log，不是流水账；详细实验、对比和结论分别放在 `verification/experiments/`、`comparisons/`、`findings/`
 - 如果 `project/brief.md`、`ideas/index.jsonl` 或 `feature-list.json` 仍是模板内容，先按 `harness/onboarding/questions.md` 执行 guided onboarding
 - onboarding 时先扫描仓库，再一次问一个关键问题；确认后的答案必须写回 `project/`、`ideas/`、`plans/` 和 `progress.md`
 - 未验证前不要标记任务完成
@@ -45,7 +46,7 @@
 
 ## 会话结束前
 
-- 更新 `harness/plans/progress.md`
+- 如形成 milestone、handoff、重要结论或 blocker，更新 `harness/plans/progress.md`
 - 更新对应任务状态
 - 记录验证/实验依据或缺失原因
 - 保持仓库处于可继续工作的状态

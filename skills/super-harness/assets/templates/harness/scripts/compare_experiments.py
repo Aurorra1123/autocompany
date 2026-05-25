@@ -156,22 +156,25 @@ def auto_fairness_checks(rows: list[dict[str, Any]]) -> list[str]:
     ]
 
 
-def append_progress(root: Path, args: argparse.Namespace, comparison_path: Path, evidence: list[dict[str, Any]]) -> None:
+def append_progress(root: Path, args: argparse.Namespace, comparison_path: Path, _evidence: list[dict[str, Any]]) -> None:
     progress_path = root / "harness" / "plans" / "progress.md"
     progress_path.parent.mkdir(parents=True, exist_ok=True)
     if not progress_path.exists():
-        progress_path.write_text("# Agent Progress Log\n", encoding="utf-8")
+        progress_path.write_text("# Project Checkpoints\n", encoding="utf-8")
 
-    evidence_paths = ", ".join(row.get("record_path") or row.get("record_id") for row in evidence)
     entry = [
         "",
-        f"## {now_utc().date().isoformat()} Comparison: {args.title}",
+        f"## {now_utc().date().isoformat()} Checkpoint: {args.title}",
         "",
-        f"- Status: `{args.status}`",
-        f"- Comparison: `{rel_path(comparison_path, root)}`",
-        f"- Evidence: {evidence_paths}",
-        f"- Claim: {single_line(args.claim)}",
+        "### Summary",
+        "",
+        f"- Comparison status: `{args.status}`",
         f"- Result: {single_line(args.result)}",
+        "",
+        "### Links",
+        "",
+        f"- Comparison: `{rel_path(comparison_path, root)}`",
+        f"- Claim: {single_line(args.claim)}",
         "",
     ]
     with progress_path.open("a", encoding="utf-8") as file:
@@ -282,7 +285,16 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--fairness-note", action="append", default=[], help="Manual fairness note.")
     parser.add_argument("--result", default="", help="Comparison result or conclusion.")
     parser.add_argument("--note", action="append", default=[], help="Additional note.")
-    parser.add_argument("--no-progress", action="store_true", help="Do not append to progress.md.")
+    parser.add_argument(
+        "--progress-checkpoint",
+        action="store_true",
+        help="Append a concise checkpoint to progress.md. Default is to keep progress.md unchanged.",
+    )
+    parser.add_argument(
+        "--no-progress",
+        action="store_true",
+        help="Deprecated compatibility flag. progress.md is not updated unless --progress-checkpoint is passed.",
+    )
     return parser
 
 
@@ -299,7 +311,7 @@ def main() -> int:
     write_comparison(root, args, comparison_id, comparison_path, evidence)
     index_path = append_index(root, comparison_id, args, comparison_path, evidence)
 
-    if not args.no_progress:
+    if args.progress_checkpoint and not args.no_progress:
         append_progress(root, args, comparison_path, evidence)
 
     print(f"[COMPARISON] {rel_path(comparison_path, root)}")

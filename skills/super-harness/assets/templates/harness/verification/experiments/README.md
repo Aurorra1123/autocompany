@@ -51,7 +51,15 @@ python3 harness/scripts/harness_run.py \
 - `harness/verification/experiments/index.jsonl`
 - `harness/verification/experiments/<timestamp>-<title>/artifacts/stdout.log`
 - `harness/verification/experiments/<timestamp>-<title>/artifacts/stderr.log`
-- `harness/plans/progress.md` 中的实验摘要
+
+默认不会写入 `harness/plans/progress.md`。如果这次实验代表阶段性 checkpoint 或交接点，显式追加：
+
+```bash
+python3 harness/scripts/harness_run.py \
+  --title "cache strategy benchmark" \
+  --progress-checkpoint \
+  -- python3 benchmarks/cache_latency.py --strategy cache-v2
+```
 
 ## 记录要求
 

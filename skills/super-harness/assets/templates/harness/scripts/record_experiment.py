@@ -511,30 +511,29 @@ def append_progress(
     progress_path = root / "harness" / "plans" / "progress.md"
     progress_path.parent.mkdir(parents=True, exist_ok=True)
     if not progress_path.exists():
-        progress_path.write_text("# Agent Progress Log\n", encoding="utf-8")
+        progress_path.write_text("# Project Checkpoints\n", encoding="utf-8")
 
     entry = [
         "",
-        f"## {now_utc().date().isoformat()} Experiment: {args.title}",
+        f"## {now_utc().date().isoformat()} Checkpoint: {args.title}",
         "",
-        f"- Status: `{status}`",
-        f"- Author: {author}",
-        f"- Record: `{rel_path(record_path, root)}`",
-        f"- Branch: `{git.get('branch') or 'unknown'}`",
+        "### Summary",
+        "",
+        f"- Experiment status: `{status}`",
+        f"- Result: {single_line(args.result)}",
+        "",
+        "### Links",
+        "",
+        f"- Experiment: `{rel_path(record_path, root)}`",
         f"- Commit: `{git.get('short_commit') or git.get('commit') or 'unknown'}`",
+        f"- Author: {author}",
+        f"- Branch: `{git.get('branch') or 'unknown'}`",
         f"- Dirty worktree: `{str(bool(git.get('dirty'))).lower()}`",
         f"- Source dirty: `{str(bool(git.get('source_dirty'))).lower()}`",
-        f"- Command: `{command_text or 'not recorded'}`",
-        f"- Result: {single_line(args.result)}",
     ]
-    if args.metric:
-        entry.append(f"- Metrics: {single_line('; '.join(args.metric))}")
-    if args.dataset:
-        entry.append(f"- Datasets: {single_line('; '.join(args.dataset))}")
-    if args.seed:
-        entry.append(f"- Seeds: {single_line('; '.join(args.seed))}")
     if args.next_steps:
-        entry.append(f"- Next: {single_line('; '.join(args.next_steps))}")
+        entry.extend(["", "### Next", ""])
+        entry.extend(f"- {single_line(item)}" for item in args.next_steps)
     entry.append("")
 
     with progress_path.open("a", encoding="utf-8") as file:
@@ -585,7 +584,16 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--timeout", type=int, default=0, help="Optional command timeout in seconds.")
     parser.add_argument("--no-duplicate-check", action="store_true", help="Do not warn about similar indexed experiments.")
     parser.add_argument("--no-index", action="store_true", help="Do not append to experiments/index.jsonl.")
-    parser.add_argument("--no-progress", action="store_true", help="Do not append to progress.md.")
+    parser.add_argument(
+        "--progress-checkpoint",
+        action="store_true",
+        help="Append a concise checkpoint to progress.md. Default is to keep progress.md unchanged.",
+    )
+    parser.add_argument(
+        "--no-progress",
+        action="store_true",
+        help="Deprecated compatibility flag. progress.md is not updated unless --progress-checkpoint is passed.",
+    )
     parser.add_argument("run_command", nargs=argparse.REMAINDER, help="Optional command to execute after --.")
     return parser
 
@@ -695,7 +703,7 @@ def main() -> int:
         )
         index_path = append_index(root, row)
 
-    if not args.no_progress:
+    if args.progress_checkpoint and not args.no_progress:
         append_progress(root, args, record_path, command_text, status, git, author)
 
     print(f"[RECORDED] {rel_path(record_path, root)}")

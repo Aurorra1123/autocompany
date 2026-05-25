@@ -8,7 +8,7 @@
 
 - 仓库是 agent 协作的主记忆体，长期有效的信息必须版本化保存
 - `AGENTS.md` 只承担入口、约束和导航职责，不承载大段细则
-- 规则、计划、进度、决策分层存放，避免混写
+- 规则、计划、checkpoint、证据和决策分层存放，避免混写
 - 每次只推进一个当前最高优先级且边界清晰的目标
 - 任何“已完成”都必须建立在验证结果之上，而不是主观判断
 
@@ -46,16 +46,16 @@ python3 harness/scripts/harness_run.py \
 - 功能、规则或文档必须经过最小必要验证
 - 未验证前，不更新完成状态
 - 已通过项在新会话中回归失败时，必须先撤回通过状态
-- 阶段结束后必须更新进度记录
+- 阶段结束、交接、重要结论变化或 blocker 出现时，更新 `progress.md` checkpoint
 - 阶段结束后必须执行 git 提交
 
 ## 多人协作
 
 - 仓库面向多个贡献者和各自的 agent 同时使用；统一的协调点是 `harness/plans/`
-- 修改 `feature-list.json` 中某条任务的 `passes` 字段前，必须先在 `harness/plans/progress.md` 中追加一行说明本次状态变更的依据（验证证据位置 / 撤回原因）
-- 同一条任务的 `owner` 字段表明当前认领人；其他人想接手时先在 progress 里说明
+- 修改 `feature-list.json` 中某条任务的 `passes` 字段前，必须确认有 `harness/verification/`、comparison、finding 或 ADR 证据链接；只有 milestone 或交接需要额外写 `progress.md`
+- 同一条任务的 `owner` 字段表明当前认领人；其他人想接手时，如果影响后续协调，在 progress checkpoint 里说明
 - ADR 文件名建议带日期前缀（如 `0003-20260521-xxx.md`）以避免不同分支撞编号
-- 出现合并冲突时，优先合并双方的 progress 记录，再处理 feature-list 状态行
+- 出现合并冲突时，优先保留双方有交接价值的 progress checkpoint，再处理 feature-list 状态行
 - 多人实验默认允许在各自分支产生独立 `experiments/<id>/record.md`；经过 review 的共识结论应沉淀到 `findings/<id>/finding.md`
 - 对比结论必须引用具体实验 record id 或路径，并检查 author、branch、commit、source dirty、dataset、seed 和 metric 定义是否可比
 
@@ -72,11 +72,11 @@ python3 harness/scripts/harness_run.py \
 - 如果要形成“方法 A 优于方法 B”这类结论，必须使用 `compare_experiments.py` 或同等结构记录 evidence 和 fairness check
 - 如果要形成团队可复用 solid conclusion，必须使用 `promote_finding.py` 从 reviewed comparison 晋升
 - 只有在存在可追溯验证证据时，才允许将测试项或功能项改为通过
-- 进度记录中应注明本次验证所依赖的命令、结果和证据位置
+- `progress.md` 只记录高层 checkpoint 和证据链接；命令、结果、指标和 artifact 细节应留在 verification 记录中
 
 ## 会话结束条件
 
-- 已更新 `harness/plans/progress.md`
+- 如形成 milestone、handoff、重要结论或 blocker，已更新 `harness/plans/progress.md`
 - 已更新对应任务或测试项的通过状态
 - 已记录本次验证/实验证据或明确说明缺失原因
 - 工作区无未提交改动
@@ -88,7 +88,7 @@ python3 harness/scripts/harness_run.py \
 - 重要决策放在 `harness/architecture/adr/`
 - 阶段计划放在 `harness/plans/exec-plan/`
 - 任务状态放在 `harness/plans/feature-list.json`
-- 会话交接和阶段进展放在 `harness/plans/progress.md`
+- 高层 checkpoint、会话交接和影响后续方向的阶段进展放在 `harness/plans/progress.md`
 - 实验过程、指标和输出放在 `harness/verification/experiments/`
 - 对比结论和审核后的实验判断放在 `harness/verification/comparisons/`
 - 审核后的团队结论放在 `harness/verification/findings/`
@@ -98,6 +98,7 @@ python3 harness/scripts/harness_run.py \
 
 - 把关键背景只留在聊天记录里
 - 在 `AGENTS.md` 中堆积大量细节
+- 把 `progress.md` 写成完整活动流水账
 - 一次同时推进多个未完成的高优先级事项
 - 没有验证就宣称完成
 - 发现流程问题后只靠人工记忆维持

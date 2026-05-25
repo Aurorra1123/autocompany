@@ -20,7 +20,8 @@ python3 harness/scripts/promote_finding.py \
 
 - `harness/verification/findings/<finding-id>/finding.md`
 - `harness/verification/findings/index.jsonl`
-- `harness/plans/progress.md` 中的 finding 摘要
+
+默认不会写入 `harness/plans/progress.md`。如果 finding 代表团队结论变化或交接点，追加 `--progress-checkpoint`。
 
 ## 状态
 

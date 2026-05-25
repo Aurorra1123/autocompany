@@ -90,7 +90,7 @@ python3 harness/scripts/record_experiment.py \
 
 基础模型或 ML 实验可以在同一套记录方式上额外补充 `--model-base`、`--data-mix`、`--tokenizer`、`--train-tokens`、`--eval-suite` 等领域控制变量。
 
-脚本会自动记录 author、branch、commit、dirty worktree、source dirty、平台和 Python 版本，创建独立实验资源目录，并追加 `experiments/index.jsonl`。
+脚本会自动记录 author、branch、commit、dirty worktree、source dirty、平台和 Python 版本，创建独立实验资源目录，并追加 `experiments/index.jsonl`。默认不会写入 `progress.md`；只有 milestone、handoff、重要实验批次或 blocker 才使用 `--progress-checkpoint` 追加高层 checkpoint。
 
 ## 实验对比脚本
 
@@ -143,8 +143,9 @@ python3 harness/scripts/promote_finding.py \
 - 将功能项从未通过改为通过前，应至少留下一份对应证据
 - 回归失败时，应在证据目录追加失败记录，而不是只在聊天中说明
 - 证据文件名应包含日期、主题和验证动作，避免使用无意义名称
-- 进度记录中应引用对应证据目录或文件
+- 如果形成 `progress.md` checkpoint，应只引用对应证据目录或文件
+- `progress.md` 只记录 checkpoint 和链接，不记录完整实验细节或每次命令输出
 - 服务于具体 idea 的实验应引用 `harness/ideas/index.jsonl` 中的 idea ID
-- 对实验型任务，进度记录中应引用 `experiments/<id>/record.md`，不要只写最终结论
+- 对实验型 checkpoint，应引用 `experiments/<id>/record.md`，不要只写最终结论
 - 对比型结论应引用 `comparisons/*.md`，并说明 idea、输入数据、控制变量、commit、metric 定义和 source dirty 状态是否一致
 - solid conclusion 应引用 `findings/*.md`，并通过 PR review 或 CODEOWNERS 规则保护

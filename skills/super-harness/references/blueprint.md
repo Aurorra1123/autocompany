@@ -13,7 +13,7 @@ Create a repository-local execution layer for long-running agent and human colla
 - `harness/onboarding/`
   Store guided onboarding questions and output rules for turning an unclear repository into explicit project memory.
 - `harness/onboarding/questions.md`
-  Guide the agent to scan the repo, ask one key question at a time, and write confirmed answers into project, ideas, plans, and progress files.
+  Guide the agent to scan the repo, ask one key question at a time, and write confirmed answers into project, ideas, plans, and concise progress checkpoints.
 - `harness/project/`
   Store the repo-level goal, current focus, non-goals, users, constraints, and success criteria.
 - `harness/project/brief.md`
@@ -27,7 +27,7 @@ Create a repository-local execution layer for long-running agent and human colla
 - `harness/plans/feature-list.json`
   Keep a structured backlog with acceptance criteria and passing status.
 - `harness/plans/progress.md`
-  Record session handoff notes, current state, and next-step suggestions.
+  Record concise checkpoint and handoff notes only. It is a timeline index, not a full activity log.
 - `harness/plans/exec-plan/`
   Store phase-level execution plans that decompose the backlog.
 - `harness/scripts/record_experiment.py`
@@ -67,6 +67,7 @@ Create a repository-local execution layer for long-running agent and human colla
 - Replace an already-mature harness without review
 - Generate project-specific architecture content
 - Monitor shell activity automatically without the agent or user invoking the recorder
+- Keep a full activity log in `progress.md`; detailed evidence belongs in `verification/`
 - Decide fairness automatically without human or agent review of dataset, seed, metric, and commit comparability
 - Enforce GitHub branch protection by itself; the generated CODEOWNERS file must be adapted and enabled in the repository host
 - Update CI, deployment, or application code
@@ -86,7 +87,7 @@ After bootstrapping, update these files first:
 5. `harness/plans/feature-list.json`
    Replace the generic bootstrap backlog with the repository's actual delivery roadmap.
 6. `harness/plans/progress.md`
-   Rewrite the initial entry so it matches the current repository baseline instead of the generic scaffold message.
+   Rewrite the initial checkpoint so it matches the current repository baseline instead of the generic scaffold message. Keep entries concise and link to evidence rather than copying details.
 7. `harness/verification/experiments/README.md`
    Confirm the experiment fields and examples match the repository's domain, then start using `harness/scripts/record_experiment.py` for future experimental work.
 8. `harness/verification/comparisons/README.md`
@@ -109,12 +110,12 @@ If the target already has documentation:
 ## Suggested First Follow-Up Tasks
 
 - Inventory existing source materials and move them under `harness/reference/` or link them clearly
-- Complete guided onboarding from `harness/onboarding/questions.md` and record assumptions/open questions in `harness/plans/progress.md`
+- Complete guided onboarding from `harness/onboarding/questions.md` and record assumptions/open questions in one concise `harness/plans/progress.md` checkpoint
 - Rewrite `harness/project/brief.md` so it names the repository's real goal, boundaries, and success criteria
 - Add the first concrete idea or hypothesis to `harness/ideas/index.jsonl`
 - Create the first repository-specific execution plan in `harness/plans/exec-plan/`
 - Capture the real architecture baseline in `harness/architecture/`
 - Add at least one verification artifact before changing any backlog item to passing
-- Run the next experiment through `harness/scripts/harness_run.py` so progress and evidence are linked automatically
+- Run the next experiment through `harness/scripts/harness_run.py` so evidence is captured; add `--progress-checkpoint` only for a meaningful handoff or milestone
 - Generate the first comparison with `harness/scripts/compare_experiments.py` when two comparable experiments exist
 - Promote the first reviewed conclusion with `harness/scripts/promote_finding.py`

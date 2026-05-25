@@ -32,7 +32,7 @@
     "id": "HRN-003",
     "category": "workflow",
     "priority": "P0",
-    "description": "建立进度记录、任务状态和验证证据的闭环",
+    "description": "建立 checkpoint、任务状态和验证证据的闭环",
     "acceptance": [
       "存在 `harness/plans/progress.md`",
       "存在结构化任务清单并带通过状态",
@@ -78,7 +78,7 @@
     "acceptance": [
       "`harness/project/brief.md` 已替换为真实项目背景",
       "`harness/ideas/index.jsonl` 已替换为真实 idea 或 hypothesis 索引",
-      "onboarding 的 assumptions、open questions 和下一步已记录到 `harness/plans/progress.md`",
+      "onboarding 结果已压缩成一条高层 checkpoint，并链接到 `harness/project/brief.md`、`harness/ideas/` 或 `harness/reference/` 中的详细依据",
       "当前任务清单反映真实业务或工程目标",
       "优先级、验收标准和通过状态不再停留在模板层",
       "新会话无需回看旧聊天即可恢复主线"

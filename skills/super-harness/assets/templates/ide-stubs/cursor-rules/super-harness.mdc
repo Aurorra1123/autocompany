@@ -9,7 +9,7 @@ instead of each contributor's individual chat history.
 Before doing any meaningful work, read:
 
 - `AGENTS.md` — entrypoint and collaboration rules
-- `harness/plans/progress.md` — latest session log
+- `harness/plans/progress.md` — latest checkpoint / handoff index
 - `harness/plans/feature-list.json` — current backlog with passing status
 
 Long-term rules live in `harness/standards/`. Architecture decisions live

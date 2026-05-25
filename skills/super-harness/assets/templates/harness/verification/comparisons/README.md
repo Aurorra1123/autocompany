@@ -22,7 +22,8 @@ python3 harness/scripts/compare_experiments.py \
 
 - `harness/verification/comparisons/<timestamp>-<title>.md`
 - `harness/verification/comparisons/index.jsonl`
-- `harness/plans/progress.md` 中的对比摘要
+
+默认不会写入 `harness/plans/progress.md`。如果这次对比改变项目方向、结论或交接状态，追加 `--progress-checkpoint`。
 
 ## 审核重点
 

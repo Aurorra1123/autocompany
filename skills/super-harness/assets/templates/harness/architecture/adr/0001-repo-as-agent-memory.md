@@ -12,7 +12,7 @@ agent 在跨会话工作时没有稳定的长期记忆。如果任务状态、�
 
 将仓库作为 agent 协作的主记忆体，至少维护以下工件：
 
-- `harness/plans/progress.md`：会话进度与交接
+- `harness/plans/progress.md`：高层 checkpoint 与交接
 - `harness/plans/feature-list.json`：任务列表与完成状态
 - `harness/standards/`：长期有效的工程规则
 - `harness/architecture/adr/`：重要设计决策

@@ -29,7 +29,7 @@ Initialize a reusable harness that treats the repository as the team's durable m
    - Use `--ide auto|claude|cursor|codex|all|none` to control which IDE-specific stubs are generated. `auto` (default) detects existing markers (`CLAUDE.md`, `.claude/`, `.cursor/`, `AGENTS.md`) and only emits the missing ones; `all` forces every supported stub; `none` skips all stubs.
    - Use `--force` only when you have already reviewed the target files and intentionally want to overwrite them.
 4. Run guided onboarding when the repository does not already have clear project memory.
-   Read `harness/onboarding/questions.md`, inspect the repo first, then ask one question at a time. Use repo evidence to draft answers where possible. Write confirmed answers back to `harness/project/brief.md`, `harness/ideas/index.jsonl`, `harness/plans/feature-list.json`, and `harness/plans/progress.md`.
+   Read `harness/onboarding/questions.md`, inspect the repo first, then ask one question at a time. Use repo evidence to draft answers where possible. Write confirmed answers back to `harness/project/brief.md`, `harness/ideas/index.jsonl`, `harness/plans/feature-list.json`, and one concise onboarding checkpoint in `harness/plans/progress.md`.
 5. Tailor the generated files immediately.
    Replace bootstrap placeholders with the repository's real project brief, idea backlog, roadmap, architecture baseline, deployment constraints, and collaboration rules. The generated `project/brief.md`, `ideas/index.jsonl`, and `feature-list.json` are starting points, not final project truth.
 6. For experiment-heavy work, use the generated recorder.
@@ -38,7 +38,7 @@ Initialize a reusable harness that treats the repository as the team's durable m
    python3 harness/scripts/harness_run.py --title "cache strategy benchmark" -- python3 benchmarks/cache_latency.py
    ```
 
-   The recorder writes `harness/verification/experiments/<id>/record.md`, captures stdout/stderr artifacts, appends `experiments/index.jsonl`, records git/environment provenance, writes a per-experiment resource bundle, and appends a progress summary. It does not monitor the shell by itself; agents should wrap experiment, benchmark, training, evaluation, or key validation commands with it whenever practical.
+   The recorder writes `harness/verification/experiments/<id>/record.md`, captures stdout/stderr artifacts, appends `experiments/index.jsonl`, records git/environment provenance, and writes a per-experiment resource bundle. It does not update `progress.md` by default; use `--progress-checkpoint` only for meaningful milestones, handoffs, experiment batches, comparisons, or reviewed findings. It does not monitor the shell by itself; agents should wrap experiment, benchmark, training, evaluation, or key validation commands with it whenever practical.
 7. For cross-branch or cross-author claims, generate a comparison.
 
    ```bash

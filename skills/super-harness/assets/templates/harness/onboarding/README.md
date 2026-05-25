@@ -16,4 +16,4 @@
   - `harness/ideas/index.jsonl`
   - `harness/plans/feature-list.json`
   - `harness/plans/progress.md`
-- 如果信息不足，明确写成 assumption 或 open question，并在 `progress.md` 记录下一步。
+- 如果信息不足，明确写成 assumption 或 open question；只有会影响后续交接的内容才写入 `progress.md` checkpoint。
