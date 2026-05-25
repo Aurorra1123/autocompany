@@ -63,6 +63,7 @@ target-repo/
 - **repo-level 背景**：`harness/project/brief.md` 记录仓库目标、非目标、当前重点、使用者、约束和成功标准。
 - **idea 验证索引**：`harness/ideas/` 记录 hypothesis、baseline、variant、控制变量和成功标准，避免实验只剩命令日志。
 - **任务状态闭环**：`feature-list.json` 里的 `passes` 字段必须有 `harness/verification/` 中的证据支撑；重要 milestone 或交接再写入 `progress.md`。
+- **旧进度压缩**：`compact_progress.py` 可以把已经变长的 `progress.md` 归档到 `reference/`，并重写为一条高层 checkpoint，避免新会话继续读流水账。
 - **实验到结论的证据链**：实验记录进入 `experiments/`，跨实验分析进入 `comparisons/`，审核后的团队结论进入 `findings/`。
 - **多人协作软约束**：每条任务带 `owner` 字段做软认领；ADR 文件名带日期前缀避免不同分支撞编号；冲突时优先合并有交接价值的 progress checkpoint。
 - **幂等**：默认 `if_missing`，不会覆盖已有文件；需要强覆盖时显式加 `--force`。

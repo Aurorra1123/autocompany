@@ -38,6 +38,8 @@ Create a repository-local execution layer for long-running agent and human colla
   Create comparison records from multiple experiment records and summarize fairness checks.
 - `harness/scripts/promote_finding.py`
   Promote reviewed comparisons into durable findings.
+- `harness/scripts/compact_progress.py`
+  Archive verbose legacy progress logs into `harness/reference/` and reset `progress.md` to one concise checkpoint.
 - `harness/standards/`
   Store durable engineering rules, git workflow, harness rules, and deployment baseline.
 - `harness/architecture/`
@@ -68,6 +70,7 @@ Create a repository-local execution layer for long-running agent and human colla
 - Generate project-specific architecture content
 - Monitor shell activity automatically without the agent or user invoking the recorder
 - Keep a full activity log in `progress.md`; detailed evidence belongs in `verification/`
+- Infer reliable conclusions from compacted legacy progress automatically
 - Decide fairness automatically without human or agent review of dataset, seed, metric, and commit comparability
 - Enforce GitHub branch protection by itself; the generated CODEOWNERS file must be adapted and enabled in the repository host
 - Update CI, deployment, or application code
@@ -88,6 +91,7 @@ After bootstrapping, update these files first:
    Replace the generic bootstrap backlog with the repository's actual delivery roadmap.
 6. `harness/plans/progress.md`
    Rewrite the initial checkpoint so it matches the current repository baseline instead of the generic scaffold message. Keep entries concise and link to evidence rather than copying details.
+   If the file already contains a long activity log, run `python3 harness/scripts/compact_progress.py --dry-run`, then apply it and review the archive under `harness/reference/`.
 7. `harness/verification/experiments/README.md`
    Confirm the experiment fields and examples match the repository's domain, then start using `harness/scripts/record_experiment.py` for future experimental work.
 8. `harness/verification/comparisons/README.md`
@@ -111,6 +115,7 @@ If the target already has documentation:
 
 - Inventory existing source materials and move them under `harness/reference/` or link them clearly
 - Complete guided onboarding from `harness/onboarding/questions.md` and record assumptions/open questions in one concise `harness/plans/progress.md` checkpoint
+- If old `progress.md` content is noisy, run `python3 harness/scripts/compact_progress.py --dry-run` and archive it before writing new checkpoints
 - Rewrite `harness/project/brief.md` so it names the repository's real goal, boundaries, and success criteria
 - Add the first concrete idea or hypothesis to `harness/ideas/index.jsonl`
 - Create the first repository-specific execution plan in `harness/plans/exec-plan/`

@@ -31,6 +31,7 @@ CORE_OPS = (
     TemplateOp("harness/scripts/record_experiment.py", "harness/scripts/record_experiment.py"),
     TemplateOp("harness/scripts/compare_experiments.py", "harness/scripts/compare_experiments.py"),
     TemplateOp("harness/scripts/promote_finding.py", "harness/scripts/promote_finding.py"),
+    TemplateOp("harness/scripts/compact_progress.py", "harness/scripts/compact_progress.py"),
     TemplateOp("harness/standards/engineering-rules.md", "harness/standards/engineering-rules.md"),
     TemplateOp("harness/standards/git-workflow.md", "harness/standards/git-workflow.md"),
     TemplateOp("harness/standards/agent-harness-rules.md", "harness/standards/agent-harness-rules.md"),

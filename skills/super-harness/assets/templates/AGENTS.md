@@ -34,6 +34,7 @@
 - `AGENTS.md` 只做入口、约束和导航，不做完整知识库
 - 不要把关键背景只留在聊天中
 - `progress.md` 是 checkpoint log，不是流水账；详细实验、对比和结论分别放在 `verification/experiments/`、`comparisons/`、`findings/`
+- 如果 `progress.md` 已经很长或混入旧流水账，先运行 `python3 harness/scripts/compact_progress.py --dry-run`，确认后归档到 `harness/reference/`
 - 如果 `project/brief.md`、`ideas/index.jsonl` 或 `feature-list.json` 仍是模板内容，先按 `harness/onboarding/questions.md` 执行 guided onboarding
 - onboarding 时先扫描仓库，再一次问一个关键问题；确认后的答案必须写回 `project/`、`ideas/`、`plans/` 和 `progress.md`
 - 未验证前不要标记任务完成

@@ -2,6 +2,8 @@
 
 本文件是高层 checkpoint / handoff log，不是完整活动流水账。详细实验、命令输出、参数、指标和过程日志应放在 `verification/`、`architecture/adr/` 或 `reference/`，这里只保留短摘要和链接。
 
+如果旧内容已经变成流水账，先运行 `python3 harness/scripts/compact_progress.py --dry-run`，确认后将旧内容归档到 `harness/reference/` 并重写本文件。
+
 ## 写入标准
 
 只有满足下面任一条件时才更新：

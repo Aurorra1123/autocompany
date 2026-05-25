@@ -73,6 +73,7 @@ python3 harness/scripts/harness_run.py \
 - 如果要形成团队可复用 solid conclusion，必须使用 `promote_finding.py` 从 reviewed comparison 晋升
 - 只有在存在可追溯验证证据时，才允许将测试项或功能项改为通过
 - `progress.md` 只记录高层 checkpoint 和证据链接；命令、结果、指标和 artifact 细节应留在 verification 记录中
+- 如果 `progress.md` 已经混入旧流水账，先用 `python3 harness/scripts/compact_progress.py --dry-run` 预览，再归档到 `harness/reference/`；不要直接删除旧记录
 
 ## 会话结束条件
 
@@ -99,6 +100,7 @@ python3 harness/scripts/harness_run.py \
 - 把关键背景只留在聊天记录里
 - 在 `AGENTS.md` 中堆积大量细节
 - 把 `progress.md` 写成完整活动流水账
+- 发现旧流水账后继续追加，而不是先压缩归档
 - 一次同时推进多个未完成的高优先级事项
 - 没有验证就宣称完成
 - 发现流程问题后只靠人工记忆维持
