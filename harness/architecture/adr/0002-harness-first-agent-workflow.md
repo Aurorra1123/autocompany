@@ -13,7 +13,7 @@ Accepted
 采用以仓库工件为中心的 harness-first 工作流，要求：
 
 - 长期知识必须写入仓库并纳入版本控制
-- `AGENTS.md` 作为入口和导航，不承载完整知识库
+- `harness/standards/agent-harness-rules.md` 作为 agent 规则入口，不在根目录保留 `AGENTS.md` 或 `CLAUDE.md`
 - 每次会话开始先读取 checkpoint、任务列表和近期历史
 - 每次只推进一个清晰且高优先级的目标
 - 完成状态必须建立在最小必要验证之上

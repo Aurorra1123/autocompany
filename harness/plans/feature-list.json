@@ -10,7 +10,7 @@
       "`harness/onboarding/questions.md` 说明首次接手仓库时的问题和输出落位规则",
       "`harness/project/brief.md` 说明 repo-level 目标、非目标、成功标准和约束",
       "`harness/ideas/` 提供 idea registry 和 idea template",
-      "如仓库缺少 `AGENTS.md`，已补最小入口文件"
+      "本仓库不在根目录保留 `AGENTS.md` 或 `CLAUDE.md`；agent 规则入口维护在 `harness/standards/agent-harness-rules.md`"
     ],
     "passes": false,
     "owner": ""

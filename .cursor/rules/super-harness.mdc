@@ -8,7 +8,7 @@ instead of each contributor's individual chat history.
 
 Before doing any meaningful work, read:
 
-- `AGENTS.md` — entrypoint and collaboration rules
+- `harness/standards/agent-harness-rules.md` — collaboration rules
 - `harness/plans/progress.md` — latest checkpoint / handoff index
 - `harness/plans/feature-list.json` — current backlog with passing status
 
